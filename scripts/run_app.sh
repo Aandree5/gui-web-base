@@ -9,12 +9,12 @@ fi
 
 APP_CMD="$1"
 
-export XDG_RUNTIME_DIR="/home/guiuser/.xdg"
+export XDG_RUNTIME_DIR="/home/guiwebuser/.xdg"
 mkdir -p "$XDG_RUNTIME_DIR"
 chmod 700 "$XDG_RUNTIME_DIR"
 
-mkdir -p /home/guiuser/.xpra
-chmod 700 /home/guiuser/.xpra
+mkdir -p /home/guiwebuser/.xpra
+chmod 700 /home/guiwebuser/.xpra
 
 # Start PulseAudio in user mode
 pulseaudio --start --exit-idle-time=-1 --log-level=error --disallow-exit
@@ -26,14 +26,14 @@ xpra start :100 \
     --mdns=no \
     --webcam=no \
     --daemon=no \
-    --socket-dir="/home/guiuser/.xpra" \
+    --socket-dir="/home/guiwebuser/.xpra" \
     --session-name=picard-session \
     --start="$APP_CMD" & XPRA_PID=$!
 
 sleep 5
 
 while kill -0 "$XPRA_PID" 2>/dev/null; do
-    if ! pgrep -u picarduser -x "$APP_BIN" >/dev/null; then
+    if ! pgrep -u guiwebuser -x "$APP_BIN" >/dev/null; then
         echo "[WARN] $APP_BIN not running. Restarting..."
         xpra control :100 start "$APP_CMD"
     fi

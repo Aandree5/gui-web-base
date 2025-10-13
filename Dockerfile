@@ -20,18 +20,19 @@ RUN cp /etc/xpra/xorg.conf /etc/X11/xorg.conf.d/00_xpra.conf \
     && echo "xvfb=Xorg" >> /etc/xpra/xpra.conf
 
 # Create a non-root user to run xpra
-RUN adduser guiuser --disabled-password
+RUN adduser guiwebuser --disabled-password
 
 # Create the /tmp/.X11-unix directory with the correct permissions, and owned by root, as required by X11
 RUN mkdir -p /tmp/.X11-unix && chown root:root /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix
 
-# Create the XDG_RUNTIME_DIR directory with the correct permissions, owned by guiuser
-RUN mkdir -p /run/xpra && chown guiuser:guiuser /run/xpra && chmod 775 /run/xpra
+# Create the XDG_RUNTIME_DIR directory with the correct permissions, owned by guiwebuser
+RUN mkdir -p /run/xpra && chown guiwebuser:guiwebuser /run/xpra && chmod 775 /run/xpra
 
-WORKDIR /home/guiuser
-COPY scripts/entrypoint.sh ./entrypoint.sh
-RUN chmod +x entrypoint.sh
-USER guiuser
+COPY scripts/run_app.sh /usr/local/bin/run_app
+RUN chmod +x /usr/local/bin/run_app
+
+WORKDIR /home/guiwebuser
+USER guiwebuser
 
 EXPOSE 5005
 
@@ -39,4 +40,4 @@ EXPOSE 5005
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD wget --spider --quiet http://localhost:5005/ || exit 1
 
-CMD ["entrypoint.sh"]
+CMD ["run_app"]
