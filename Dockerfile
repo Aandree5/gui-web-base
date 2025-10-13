@@ -28,7 +28,7 @@ RUN mkdir -p /tmp/.X11-unix && chown root:root /tmp/.X11-unix && chmod 1777 /tmp
 RUN mkdir -p /run/xpra && chown guiuser:guiuser /run/xpra && chmod 775 /run/xpra
 
 WORKDIR /home/guiuser
-COPY entrypoint.sh ./entrypoint.sh
+COPY scripts/entrypoint.sh ./entrypoint.sh
 RUN chmod +x entrypoint.sh
 USER guiuser
 
