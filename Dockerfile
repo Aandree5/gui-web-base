@@ -11,12 +11,13 @@ RUN apt-get update && apt-get install -y \
     python3-xdg \
     xauth \
     ffmpeg \
-    wget
+    wget \
+    && apt-get autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get autoremove && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-RUN cp /etc/xpra/xorg.conf /etc/X11/xorg.conf.d/00_xpra.conf
-RUN echo "xvfb=Xorg" >> /etc/xpra/xpra.conf
+RUN cp /etc/xpra/xorg.conf /etc/X11/xorg.conf.d/00_xpra.conf \
+    && echo "xvfb=Xorg" >> /etc/xpra/xpra.conf
 
 # Create a non-root user to run xpra
 RUN adduser guiuser --disabled-password
