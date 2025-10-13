@@ -8,6 +8,7 @@ if [ -z "$1" ]; then
 fi
 
 APP_CMD="$1"
+APP_NAME=$(basename "$APP_CMD")
 
 export XDG_RUNTIME_DIR="/home/guiwebuser/.xdg"
 mkdir -p "$XDG_RUNTIME_DIR"
@@ -33,8 +34,9 @@ xpra start :100 \
 sleep 5
 
 while kill -0 "$XPRA_PID" 2>/dev/null; do
-    if ! pgrep -u guiwebuser -x "$APP_CMD" >/dev/null; then
-        echo "[WARN] $APP_CMD not running. Restarting..."
+    # Check if app is running inside Xpra
+    if ! xpra control :100 list-windows | grep -q "$APP_NAME"; then
+        echo "[WARN] $APP_NAME not found in Xpra session. Restarting..."
         xpra control :100 start "$APP_CMD"
     fi
     sleep 2

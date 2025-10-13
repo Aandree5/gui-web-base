@@ -28,8 +28,8 @@ RUN mkdir -p /tmp/.X11-unix && chown root:root /tmp/.X11-unix && chmod 1777 /tmp
 # Create the XDG_RUNTIME_DIR directory with the correct permissions, owned by guiwebuser
 RUN mkdir -p /run/xpra && chown guiwebuser:guiwebuser /run/xpra && chmod 775 /run/xpra
 
-COPY scripts/run_app.sh /usr/local/bin/run_app
-RUN chmod +x /usr/local/bin/run_app
+COPY scripts/start.sh /usr/local/bin/start
+RUN chmod +x /usr/local/bin/start
 
 WORKDIR /home/guiwebuser
 USER guiwebuser
@@ -40,4 +40,4 @@ EXPOSE 5005
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD wget --spider --quiet http://localhost:5005/ || exit 1
 
-CMD ["run_app"]
+CMD ["start"]
