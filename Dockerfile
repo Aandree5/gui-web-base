@@ -27,10 +27,9 @@ RUN mkdir -p /tmp/.X11-unix && chown root:root /tmp/.X11-unix && chmod 1777 /tmp
 # Create the XDG_RUNTIME_DIR directory with the correct permissions, owned by guiuser
 RUN mkdir -p /run/xpra && chown guiuser:guiuser /run/xpra && chmod 775 /run/xpra
 
-COPY scripts/entrypoint.sh /home/guiuser/entrypoint.sh
-RUN chmod +x /home/guiuser/entrypoint.sh
-
 WORKDIR /home/guiuser
+COPY entrypoint.sh ./entrypoint.sh
+RUN chmod +x entrypoint.sh
 USER guiuser
 
 EXPOSE 5005
@@ -39,4 +38,4 @@ EXPOSE 5005
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD wget --spider --quiet http://localhost:5005/ || exit 1
 
-CMD ["/home/guiuser/entrypoint.sh"]
+CMD ["entrypoint.sh"]
