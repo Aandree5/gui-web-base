@@ -1,6 +1,6 @@
 FROM debian:bookworm-slim
 
-RUN apt update && apt install -y \
+RUN apt-get update && apt-get install -y \
     xpra \
     python3-dbus \
     dbus-x11 \
@@ -13,7 +13,7 @@ RUN apt update && apt install -y \
     ffmpeg \
     wget
 
-RUN apt autoremove && apt clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get autoremove && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN cp /etc/xpra/xorg.conf /etc/X11/xorg.conf.d/00_xpra.conf
 RUN echo "xvfb=Xorg" >> /etc/xpra/xpra.conf
