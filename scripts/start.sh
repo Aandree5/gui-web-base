@@ -29,15 +29,13 @@ xpra start :100 \
     --daemon=no \
     --socket-dir="/home/guiwebuser/.xpra" \
     --session-name=picard-session \
-    --desktop-fullscreen=yes \
     --window-close=ignore \
     --start="$APP_CMD" & XPRA_PID=$!
 
 sleep 5
 
 while kill -0 "$XPRA_PID" 2>/dev/null; do
-    # Check if app is running inside Xpra
-    if ! xpra list-windows | grep -q "$APP_NAME"; then
+    if ! pgrep -x "$APP_CMD" >/dev/null; then
         echo "[WARN] $APP_NAME not found in Xpra session. Restarting..."
         xpra control :100 start "$APP_CMD"
     fi
