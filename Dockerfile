@@ -1,4 +1,5 @@
 FROM debian:bookworm-slim
+ARG WEBPAGE_TITLE="GUI web app"
 
 RUN apt-get update && apt-get install -y \
     xpra \
@@ -16,15 +17,20 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# xorg configuration
 COPY config/xorg.conf /etc/X11/xorg.conf.d/00_xpra.conf
+
+# Set the default webpage title
+COPY scripts/set_webpage_title.sh /usr/local/bin/set_webpage_title
+RUN chmod +x /usr/local/bin/set_webpage_title
 
 # Create a non-root user to run xpra
 RUN adduser guiwebuser --disabled-password
 
-# Create the /tmp/.X11-unix directory with the correct permissions, and owned by root, as required by X11
+# Create the /tmp/.X11-unix directory with the correct permissions. Must be owned by root, as required by X11.
 RUN mkdir -p /tmp/.X11-unix && chown root:root /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix
 
-# Create the XDG_RUNTIME_DIR directory with the correct permissions, owned by guiwebuser
+# Create the XDG_RUNTIME_DIR directory with the correct permissions, owned by guiwebuser.
 RUN mkdir -p /run/xpra && chown guiwebuser:guiwebuser /run/xpra && chmod 775 /run/xpra
 
 COPY scripts/start.sh /usr/local/bin/start
