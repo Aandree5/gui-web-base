@@ -20,5 +20,5 @@ jobs:
       - name: Run Release Please
         uses: google-github-actions/release-please-action@v4
         with:
-          release-type: docker
+          release-type: simple
           package-name: ${{ github.event.repository.name }}
