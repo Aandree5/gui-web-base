@@ -16,8 +16,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN cp /etc/xpra/xorg.conf /etc/X11/xorg.conf.d/00_xpra.conf \
-    && echo "xvfb=Xorg" >> /etc/xpra/xpra.conf
+COPY config/xorg.conf /etc/X11/xorg.conf.d/00_xpra.conf
 
 # Create a non-root user to run xpra
 RUN adduser guiwebuser --disabled-password
