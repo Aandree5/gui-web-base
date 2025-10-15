@@ -7,5 +7,6 @@
       "changelog-path": "CHANGELOG.md",
       "version-file": "version.txt"
     }
-  }
+  },
+  ".": "0.2.0"
 }
