@@ -25,8 +25,7 @@ jobs:
         uses: google-github-actions/release-please-action@v4
         id: release
         with:
-          release-type: simple
-          package-name: ${{ github.event.repository.name }}
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Tag major and minor versions
         if: ${{ steps.release.outputs.release_created }}
