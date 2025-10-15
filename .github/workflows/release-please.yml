@@ -22,11 +22,10 @@ jobs:
           node-version: '20'
 
       - name: Run Release Please
-        uses: google-github-actions/release-please-action@v4
+        uses: googleapis/release-please-action@v4
         id: release
         with:
-          release-type: simple
-          package-name: ${{ github.event.repository.name }}
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Tag major and minor versions
         if: ${{ steps.release.outputs.release_created }}
