@@ -7,4 +7,117 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/aandree5/gui-web-base?logoColor=white&color=blue&label=Docker%20pulls&logo=data:image/svg+xml;base64,PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KDTwhLS0gVXBsb2FkZWQgdG86IFNWRyBSZXBvLCB3d3cuc3ZncmVwby5jb20sIFRyYW5zZm9ybWVkIGJ5OiBTVkcgUmVwbyBNaXhlciBUb29scyAtLT4KPHN2ZyBmaWxsPSIjZmZmZmZmIiB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSIwIC01IDM0IDM0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHN0cm9rZT0iI2ZmZmZmZiI+Cg08ZyBpZD0iU1ZHUmVwb19iZ0NhcnJpZXIiIHN0cm9rZS13aWR0aD0iMCIvPgoNPGcgaWQ9IlNWR1JlcG9fdHJhY2VyQ2FycmllciIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cg08ZyBpZD0iU1ZHUmVwb19pY29uQ2FycmllciI+Cg08cGF0aCBkPSJtMTUuMjEgMTAuOTIzdi0zLjE1OWgzLjUzM3YzLjE1OXptMy41MzMtMTAuOTIzdjMuMjY3aC0zLjUzM3YtMy4yNjd6bTQuMTc3IDcuNzd2My4xNTloLTMuNTMzdi0zLjE1OXptLTguMzUzLTMuODU1djMuMjEzaC0zLjUzM3YtMy4yMTN6bTQuMTc3IDB2My4yMTNoLTMuNTM0di0zLjIxM3ptMTQuODM0IDUuMzQ4LjY5Ni40ODItLjQ4Mi45MTRjLS41MDQuOTk4LTEuMzc3IDEuNzQ5LTIuNDM0IDIuMDgxbC0uMDI5LjAwOGMtLjY2Mi4yMDUtMS40MjMuMzI0LTIuMjExLjMyNC0uMDcgMC0uMTM5LS4wMDEtLjIwOC0uMDAzaC4wMWMtMS4zNiAzLjQwOS0zLjY5MiA2LjE5LTYuNjUyIDguMDcybC0uMDY4LjA0MWMtMi45MzcgMS43NzEtNi40ODQgMi44MTktMTAuMjc2IDIuODE5LS4yIDAtLjM5OC0uMDAzLS41OTctLjAwOWwuMDI5LjAwMXEtNS44OSAwLTguODg5LTMuNTM0Yy0uOTU3LTEuMTg1LTEuNjgtMi42MDMtMi4wNzItNC4xNTJsLS4wMTYtLjA3NmMtLjIzOS0uODY0LS4zNzctMS44NTctLjM3Ny0yLjg4MSAwLS41NTEuMDQtMS4wOTQuMTE3LTEuNjI0bC0uMDA3LjA2aDIzLjI5NGMuMDQ0LjAwMS4wOTYuMDAyLjE0OC4wMDIuODg1IDAgMS43MTktLjIxOSAyLjQ1MS0uNjA1bC0uMDI5LjAxNGMtLjQxNi0uNjY5LS42NjMtMS40ODEtLjY2My0yLjM1IDAtLjE1My4wMDgtLjMwNC4wMjMtLjQ1M2wtLjAwMi4wMTljLjA0OS0xLjAzNi4zNjEtMS45OTEuODcxLTIuODA5bC0uMDE0LjAyNS41MzYtLjc1Ljc1LjUzNmMxLjEzOS43NjYgMS45NDQgMS45NTYgMi4xODkgMy4zMzlsLjAwNS4wMzFjLjM5LS4wNjIuODQxLS4wOTcgMS4yOTktLjA5Ny4zMDcgMCAuNjEuMDE2LjkwOS4wNDdsLS4wMzctLjAwM2MuNjQ3LjAyNCAxLjI0NS4yMiAxLjc1My41NDJsLS4wMTQtLjAwOXptLTI3LjM2My0xLjQ5OXYzLjE1OWgtMy41MzR2LTMuMTU5em00LjE3NyAwdjMuMTU5aC0zLjUzMnYtMy4xNTl6bTQuMTc3IDB2My4xNTloLTMuNTM1di0zLjE1OXptLTQuMTc4LTMuODU1djMuMjEzaC0zLjUzMXYtMy4yMTN6Ii8+Cg08L2c+Cg08L3N2Zz4=)  
 ![GitHub License](https://img.shields.io/github/license/aandree5/gui-web-base?logoColor=white&color=red&label=License&logo=data:image/svg+xml;base64,PCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KDTwhLS0gVXBsb2FkZWQgdG86IFNWRyBSZXBvLCB3d3cuc3ZncmVwby5jb20sIFRyYW5zZm9ybWVkIGJ5OiBTVkcgUmVwbyBNaXhlciBUb29scyAtLT4KPHN2ZyB3aWR0aD0iNjRweCIgaGVpZ2h0PSI2NHB4IiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+Cg08ZyBpZD0iU1ZHUmVwb19iZ0NhcnJpZXIiIHN0cm9rZS13aWR0aD0iMCIvPgoNPGcgaWQ9IlNWR1JlcG9fdHJhY2VyQ2FycmllciIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cg08ZyBpZD0iU1ZHUmVwb19pY29uQ2FycmllciI+IDxwYXRoIG9wYWNpdHk9IjAuMSIgZD0iTTEyIDE3SDdDNS44OTU0MyAxNyA1IDE2LjEwNDYgNSAxNVY1QzUgMy44OTU0MyA1Ljg5NTQzIDMgNyAzSDE2QzE3LjEwNDYgMyAxOCAzLjg5NTQzIDE4IDVWMTlDMTggMjAuMTA0NiAxNy4xMDQ2IDIxIDE2IDIxQzE0Ljg5NTQgMjEgMTQgMjAuMTA0NiAxNCAxOUMxNCAxNy44OTU0IDEzLjEwNDYgMTcgMTIgMTdaIiBmaWxsPSIjZmZmZmZmIi8+IDxwYXRoIGQ9Ik0xOSAzSDlWM0M3LjExNDM4IDMgNi4xNzE1NyAzIDUuNTg1NzkgMy41ODU3OUM1IDQuMTcxNTcgNSA1LjExNDM4IDUgN1YxMC41VjE3IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+IDxwYXRoIGQ9Ik0xNCAxN1YxOUMxNCAyMC4xMDQ2IDE0Ljg5NTQgMjEgMTYgMjFWMjFDMTcuMTA0NiAyMSAxOCAyMC4xMDQ2IDE4IDE5VjlWNC41QzE4IDMuNjcxNTcgMTguNjcxNiAzIDE5LjUgM1YzQzIwLjMyODQgMyAyMSAzLjY3MTU3IDIxIDQuNVY0LjVDMjEgNS4zMjg0MyAyMC4zMjg0IDYgMTkuNSA2SDE4LjUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4gPHBhdGggZD0iTTE2IDIxSDVDMy44OTU0MyAyMSAzIDIwLjEwNDYgMyAxOVYxOUMzIDE3Ljg5NTQgMy44OTU0MyAxNyA1IDE3SDE0IiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+IDxwYXRoIGQ9Ik05IDdIMTQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4gPHBhdGggZD0iTTkgMTFIMTQiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4gPC9nPgoNPC9zdmc+)
 
-A docker base image to simplify the creation of containers that provide access to another application's GUI via any web browser.
+A Docker base image to simplify the creation of downstream containers that run Linux GUI apps in a web browser.
+
+## ✨ Why this project?
+
+This base image is designed to:
+
+- Provide a consistent, browser-accessible GUI environment for Linux applications  
+- Enable seamless copy & paste between the containerized app and the browser  
+- Support audio forwarding and media handling out of the box  
+- Serve as a foundation for packaging GUI apps in a reproducible, maintainable way
+
+## 🚀 Quick Start
+
+This image is designed to be used as a **base** for Dockerfiles.  
+Install a desired GUI app and configure `CMD ["start", "<app>"]` to launch it.
+
+### Example `Dockerfile`
+
+```dockerfile
+# Prefer pinning for reproducibility (at least a major, e.g. :v1)
+# Pinning to <major>.<minor> (e.g. :v1.1) limits updates to patches only.
+FROM aandree5/gui-web-base:v1
+
+# Install the GUI app (replacing "<app>" with the package name)
+RUN apt-get update && \
+    apt-get install -y <app> && \
+    && apt-get autoremove \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+    
+# Start the app via the base entrypoint
+CMD ["start", "<app>"]
+```
+
+### Build and run
+
+```bash
+# Build the image
+docker build -t gui-web-app .
+
+# Run it
+# The GUI will be exposed via the configured web interface
+docker run -d -p 5005:5005 --name gui-web-app gui-web-app
+```
+
+Then open [http://localhost:5005](http://localhost:5005) in the browser.
+
+## ⚙️ Configuration
+
+The base image includes helper scripts to customize the browser-facing interface.
+
+- **Set the web page title**  
+  The browser tab title can be set adding the follwoing to the `Dockerfile`.
+
+  ```dockerfile
+  RUN set_webpage_title "My Custom App"
+  ```
+
+## 🏷️ Versioning & Tags
+
+This project follows [Semantic Versioning](https://semver.org/) and uses automated releases.
+
+Available tags:
+
+- **`v<major>`** — e.g. `v1`  
+  Tracks the latest stable release within that major version.  
+  Recommended for most downstream images to stay up-to-date with non-breaking changes.
+
+- **`v<major>.<minor>`** — e.g. `v1.1`  
+  Tracks the latest **patch** release for that minor version.  
+  Includes bug fixes and security updates only; **no new features** beyond `1.1.x`.
+
+- **`v<major>.<minor>.<patch>`** — e.g. `v1.1.0`  
+  Fully pinned, reproducible version.  
+  No changes unless you manually update.
+
+- **`latest`** — always points to the newest release.  
+  Not recommended for production, as it may introduce breaking changes unexpectedly.
+
+## 🛠️ Contributing
+
+We welcome contributions! Please follow these steps to get set up:
+
+1. **Clone the repository**:
+
+   ```bash
+   git clone https://github.com/Aandree5/gui-web-base.git
+   cd gui-web-base
+   ```
+
+2. **Install pre-commit hooks** (for license headers, linting, etc.):
+
+   ```bash
+   pip install pre-commit
+   pre-commit install
+   ```
+
+3. **Follow [Conventional Commits](https://www.conventionalcommits.org/)** for commit messages:
+   - `feat: add new feature`
+   - `fix: correct a bug`
+   - `docs: update documentation`
+   - `chore: tooling or maintenance`
+   - `ci: workflow changes`
+
+4. **Open a Pull Request** against `main`.  
+   Our GitHub Actions workflows will:
+   - Run pre-commit checks
+   - Build and healthcheck the Docker image
+
+## 📚 Resources
+
+- [Code of Conduct](./CODE_OF_CONDUCT.md)
+- [Contributing Guide](./CONTRIBUTING.md)
+- [Apache 2.0 License](./LICENSE)
