@@ -1,0 +1,7 @@
+repos:
+  - repo: https://github.com/google/addlicense
+    rev: v1.2.0
+    hooks:
+      - id: addlicense
+        args: ["-c", "André Silva", "-l", "apache"]
+        files: ^(Dockerfile|.*\.sh)$
