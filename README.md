@@ -1,6 +1,6 @@
 # GUI Web base
 
-<div style="text-align: center">
+<div align="center">
   <img src="images/logo_256.png" alt="Logo" />
 </div>
 
