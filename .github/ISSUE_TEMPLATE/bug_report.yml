@@ -1,4 +1,4 @@
-name: Bug Report
+name: 🐞 Bug Report
 description: Report a reproducible issue with the GUI web base image
 labels: [bug]
 body:
