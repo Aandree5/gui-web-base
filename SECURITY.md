@@ -15,6 +15,7 @@ If you discover a security vulnerability in this project:
 - Public issues should **not** be used for reporting vulnerabilities.
 
 Reports may include vulnerabilities in:
+
 - The base image and its configuration
 - Dependencies bundled in the image
 - Scripts and tooling provided by this project
