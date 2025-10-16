@@ -2,7 +2,7 @@
 
 We’re excited that you want to contribute! This document outlines how to engage with the project and community in a respectful and productive way.
 
-## 🐛 Creating Good Issues
+## 🧩 Creating Good Issues
 
 - **Search first**: Check existing issues and discussions before opening a new one.
 - **Be specific**: Include steps to reproduce, expected vs. actual behavior, and environment details.
