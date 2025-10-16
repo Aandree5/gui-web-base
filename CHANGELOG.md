@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/Aandree5/gui-web-base/compare/v1.1.0...v1.1.1) (2025-10-15)
+
+
+### Bug Fixes
+
+* url too long ([#15](https://github.com/Aandree5/gui-web-base/issues/15)) ([c256e8c](https://github.com/Aandree5/gui-web-base/commit/c256e8ceecb2f5bd222d6f0c5c38a39d6019f989))
+
 ## [1.1.0](https://github.com/Aandree5/gui-web-base/compare/v1.0.0...v1.1.0) (2025-10-15)
 
 
