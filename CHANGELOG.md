@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://github.com/Aandree5/gui-web-base/compare/v1.1.2...v1.2.0) (2025-10-17)
+
+
+### Features
+
+* configure favicon ([ca7cd29](https://github.com/Aandree5/gui-web-base/commit/ca7cd2943199c01e4f6d0ce3192965d0cd6b77de))
+* favicon configuration ([#33](https://github.com/Aandree5/gui-web-base/issues/33)) ([ca7cd29](https://github.com/Aandree5/gui-web-base/commit/ca7cd2943199c01e4f6d0ce3192965d0cd6b77de))
+
 ## [1.1.2](https://github.com/Aandree5/gui-web-base/compare/v1.1.1...v1.1.2) (2025-10-17)
 
 
