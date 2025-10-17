@@ -15,19 +15,38 @@
 
 
 HTML_FILE="/usr/share/xpra/www/index.html"
-WEBPAGE_TITLE="${1:-GUI web app}"
+FAVICON_FILE="${1}"
 
 if [ ! -f "$HTML_FILE" ]; then
     echo "File not found: $HTML_FILE"
     exit 1
 fi
 
-if grep -q "<title>" "$HTML_FILE"; then
-    # Replace existing title
-    sed -i "s|<title>.*</title>|<title>${WEBPAGE_TITLE}</title>|" "$HTML_FILE"
-else
-    # Insert title after <head> tag
-    sed -i "/<head>/a <title>${WEBPAGE_TITLE}</title>" "$HTML_FILE"
+if [ ! -f "$FAVICON_FILE" ]; then
+    sed -i '/<!-- FAVICON -->/,/<!-- FAVICON -->/d' $HTML_FILE
+    
+    echo "Favicon removed in $HTML_FILE"
+    exit 0
 fi
 
-echo "Title updated in $HTML_FILE"
+FAVICON_CONTENT=$(cat "$FAVICON_FILE")
+
+# Determine insertion point: <title> or <head>
+# Title should exists at this point, but just in case it doesn't
+if grep -q "<title>" "$HTML_FILE"; then
+    INSERT_TAG="<title>"
+else
+    INSERT_TAG="<head>"
+fi
+
+sed -i "/$INSERT_TAG/a <!-- FAVICON -->" "$HTML_FILE"
+
+# Reverse the lines and insert each one after <title>
+# `tac` prints lines in reverse order
+tac "$FAVICON_FILE" | while IFS= read -r line; do
+    sed -i "/$INSERT_TAG/a $line" "$HTML_FILE"
+done
+
+sed -i "/$INSERT_TAG/a <!-- FAVICON -->" "$HTML_FILE"
+
+echo "Favicon set in $HTML_FILE"
