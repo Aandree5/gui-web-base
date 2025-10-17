@@ -32,6 +32,8 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+#### CONFIGURATION FILES ####
+
 # xorg configuration
 COPY config/xorg.conf /etc/X11/xorg.conf.d/00_gui-web-base.conf
 
@@ -40,6 +42,23 @@ COPY scripts/set_webpage_title.sh /usr/local/bin/set_webpage_title
 RUN chmod +x /usr/local/bin/set_webpage_title
 
 RUN set_webpage_title "GUI web app"
+
+# Set the default favicon
+# Remove default favicon file
+RUN rm /usr/share/xpra/www/favicon.png
+
+# Copy files
+COPY favicon/ /usr/share/xpra/www/favicon/
+COPY favicon/favicon.ico /usr/share/xpra/www/favicon.ico
+
+# Set html header
+COPY config/favicon.html ./favicon.html
+COPY scripts/set_webpage_favicon.sh /usr/local/bin/set_webpage_favicon
+RUN chmod +x /usr/local/bin/set_webpage_favicon
+
+RUN set_webpage_favicon "./favicon.html" && rm ./favicon.html
+
+#### SETUP USER, DIRECTORIES AND PERMISSIONS ####
 
 # Create a non-root user to run xpra
 RUN adduser guiwebuser --disabled-password
@@ -64,7 +83,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
 
 CMD ["start"]
 
-# ---- Healtcheck test stage for CI checks (adds xclock) ----
+# ---- Healthcheck test stage for CI checks (adds xclock) ----
 # This stage is used in CI to test the healthcheck functionality.
 # Will not be present in the final image, so not adding unnecessary packages to the final image.
 FROM base AS ci-healthcheck
@@ -80,5 +99,5 @@ CMD ["start", "xclock"]
 
 # ---- Final runtime image ----
 # This is the stage used for the final image.
-# Any images inheriting from this image will not have the CI healtcheck test.
+# Any images inheriting from this image will not have the CI healthcheck test.
 FROM base AS runtime
