@@ -1,6 +1,9 @@
 name: ✨ Feature Request
 description: Suggest an enhancement or new capability
+title: "[Request]: "
 labels: [enhancement]
+assignees:
+  - Aandree5
 body:
   - type: markdown
     attributes:
@@ -8,9 +11,9 @@ body:
         We appreciate your input! Suggestions that enhance how the app works, looks, or feels are always welcome.
 
   - type: input
-    id: summary
+    id: description
     attributes:
-      label: Summary
+      label: Description of the Feature
       placeholder: "Expose container hostname in browser UI"
     validations:
       required: true
