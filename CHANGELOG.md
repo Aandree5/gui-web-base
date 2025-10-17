@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/Aandree5/gui-web-base/compare/v1.1.1...v1.1.2) (2025-10-17)
+
+
+### Bug Fixes
+
+* default webpage title not working ([#31](https://github.com/Aandree5/gui-web-base/issues/31)) ([8082510](https://github.com/Aandree5/gui-web-base/commit/8082510c813473a291e0a8e622cd971fe435d39f))
+
 ## [1.1.1](https://github.com/Aandree5/gui-web-base/compare/v1.1.0...v1.1.1) (2025-10-15)
 
 
