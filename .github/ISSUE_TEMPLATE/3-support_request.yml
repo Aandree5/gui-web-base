@@ -54,6 +54,6 @@ body:
       default: 1
       multiple: false
       options:
-        - 🔵 Low - Minor inconvenience, workaround available
-        - 🟡 Medium - Affects productivity, but not blocking
-        - 🔴 High - Blocking progress, needs urgent attention
+        - 🔵 Low - Minor inconvenience
+        - 🟡 Medium - Affects productivity
+        - 🔴 High - Blocking progress
