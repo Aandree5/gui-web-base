@@ -1,0 +1,9 @@
+{
+    "yaml.schemas": {
+        "https://www.schemastore.org/github-issue-forms.json": [
+            "file:///c%3A/.STF/projects/gui-web-base/.github/ISSUE_TEMPLATE/support_request.yml",
+            "file:///c%3A/.STF/projects/gui-web-base/.github/ISSUE_TEMPLATE/2-feature_request.yml",
+            "file:///c%3A/.STF/projects/gui-web-base/.github/ISSUE_TEMPLATE/1-bug_report.yml"
+        ]
+    }
+}

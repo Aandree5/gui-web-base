@@ -1,6 +1,9 @@
 name: 🐞 Bug Report
 description: Report a reproducible issue with the GUI web base image
+title: "[Bug]: "
 labels: [bug]
+assignees:
+  - Aandree5
 body:
   - type: markdown
     attributes:
@@ -8,9 +11,9 @@ body:
         Thanks for reporting a bug! Please fill out the details below to help us reproduce and fix it.
 
   - type: input
-    id: summary
+    id: description
     attributes:
-      label: Summary
+      label: Description of the Issue
       description: Brief description of the issue
       placeholder: "App crashes when launched via browser"
     validations:
