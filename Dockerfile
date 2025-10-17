@@ -14,9 +14,9 @@
 
 # ---- Base stage ----
 FROM debian:bookworm-slim AS base
-ARG WEBPAGE_TITLE="GUI web app"
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update \
+    && apt-get install -y \
     xpra \
     python3-dbus \
     dbus-x11 \
@@ -33,11 +33,13 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # xorg configuration
-COPY config/xorg.conf /etc/X11/xorg.conf.d/00_xpra.conf
+COPY config/xorg.conf /etc/X11/xorg.conf.d/00_gui-web-base.conf
 
 # Set the default webpage title
 COPY scripts/set_webpage_title.sh /usr/local/bin/set_webpage_title
 RUN chmod +x /usr/local/bin/set_webpage_title
+
+RUN set_webpage_title "GUI web app"
 
 # Create a non-root user to run xpra
 RUN adduser guiwebuser --disabled-password
@@ -65,12 +67,12 @@ CMD ["start"]
 # ---- Healtcheck test stage for CI checks (adds xclock) ----
 # This stage is used in CI to test the healthcheck functionality.
 # Will not be present in the final image, so not adding unnecessary packages to the final image.
-FROM base AS ci-healtcheck
+FROM base AS ci-healthcheck
 
 USER root
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends x11-apps
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends x11-apps
 
 USER guiwebuser
 
@@ -78,5 +80,5 @@ CMD ["start", "xclock"]
 
 # ---- Final runtime image ----
 # This is the stage used for the final image.
-# Any images ihneriting from this image will not have the CI healtcheck test.
+# Any images inheriting from this image will not have the CI healtcheck test.
 FROM base AS runtime
