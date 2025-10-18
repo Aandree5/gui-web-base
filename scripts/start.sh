@@ -42,7 +42,7 @@ xpra start :100 \
     --webcam=no \
     --daemon=no \
     --socket-dir="/home/guiwebuser/.xpra" \
-    --session-name=picard-session \
+    --session-name="TESTING" \
     --window-close=ignore \
     --start="$APP_CMD" & XPRA_PID=$!
 

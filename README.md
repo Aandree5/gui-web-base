@@ -58,45 +58,6 @@ docker run -d -p 5005:5005 --name gui-web-app gui-web-app
 
 Then open [http://localhost:5005](http://localhost:5005) in the browser.
 
-## ⚙️ Configuration
-
-The base image includes helper scripts to customize the browser-facing interface.
-
-- **Set the web page title**  
-  Use the follwoing in the `Dockerfile` to set the tab title.
-
-  ```dockerfile
-  RUN set_webpage_title "My Custom App"
-  ```
-
-- **Set the web page favicon**  
-  There's two ways to set the tab icon.
-
-  - _Simple Icon_
-
-    ```dockerfile
-    # Copy favicon files
-    COPY <favicon folder>/favicon.ico /usr/share/xpra/www/favicon.ico
-
-    # Clear the default favicon html header code and files
-    RUN set_webpage_favicon && rm -rf /usr/share/xpra/www/favicon
-    ```
-
-  - _Complex Icon_
-
-    ```dockerfile
-    # Copy favicon files
-    COPY <favicon folder>/ /usr/share/xpra/www/favicon/
-    COPY <favicon folder>/favicon.ico /usr/share/xpra/www/favicon.ico
-
-    # Set favicon html header code
-    COPY <config folder>/favicon.html ./favicon.html
-
-    RUN set_webpage_favicon "./favicon.html" && rm ./favicon.html
-    ```
-
-    > **_Where `favicon.html` contains the html code to add to the header of the index file_**
-
 ## 🏷️ Versioning & Tags
 
 This project follows [Semantic Versioning](https://semver.org/) and uses automated releases.
