@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/Aandree5/gui-web-base/compare/v1.2.0...v1.2.1) (2025-10-18)
+
+
+### Bug Fixes
+
+* removed customisation as it breaches upstream license ([#36](https://github.com/Aandree5/gui-web-base/issues/36)) ([91408d2](https://github.com/Aandree5/gui-web-base/commit/91408d28e9af2a5c0727465aa6bbf9a964b6401c))
+
 ## [1.2.0](https://github.com/Aandree5/gui-web-base/compare/v1.1.2...v1.2.0) (2025-10-17)
 
 
