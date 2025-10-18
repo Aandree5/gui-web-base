@@ -45,8 +45,11 @@ RUN adduser guiwebuser --disabled-password
 # Create the /tmp/.X11-unix directory with the correct permissions. Must be owned by root, as required by X11.
 RUN mkdir -p /tmp/.X11-unix && chown root:root /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix
 
-# Create the XDG_RUNTIME_DIR directory with the correct permissions, owned by guiwebuser.
+# Group socket directory with the correct permissions, owned by guiwebuser.
 RUN mkdir -p /run/xpra && chown guiwebuser:guiwebuser /run/xpra && chmod 775 /run/xpra
+
+# Doamin socket directory with the correct permissions, owned by guiwebuser.
+RUN mkdir -p /run/user/1000/xpra && chown guiwebuser:guiwebuser /run/user/1000/xpra && chmod 775 /run/user/1000/xpra
 
 COPY scripts/start.sh /usr/local/bin/start
 RUN chmod +x /usr/local/bin/start
