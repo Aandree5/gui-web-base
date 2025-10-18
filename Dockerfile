@@ -37,27 +37,6 @@ RUN apt-get update \
 # xorg configuration
 COPY config/xorg.conf /etc/X11/xorg.conf.d/00_gui-web-base.conf
 
-# Set the default webpage title
-COPY scripts/set_webpage_title.sh /usr/local/bin/set_webpage_title
-RUN chmod +x /usr/local/bin/set_webpage_title
-
-RUN set_webpage_title "GUI web app"
-
-# Set the default favicon
-# Remove default favicon file
-RUN rm /usr/share/xpra/www/favicon.png
-
-# Copy files
-COPY favicon/ /usr/share/xpra/www/favicon/
-COPY favicon/favicon.ico /usr/share/xpra/www/favicon.ico
-
-# Set html header
-COPY config/favicon.html ./favicon.html
-COPY scripts/set_webpage_favicon.sh /usr/local/bin/set_webpage_favicon
-RUN chmod +x /usr/local/bin/set_webpage_favicon
-
-RUN set_webpage_favicon "./favicon.html" && rm ./favicon.html
-
 #### SETUP USER, DIRECTORIES AND PERMISSIONS ####
 
 # Create a non-root user to run xpra
