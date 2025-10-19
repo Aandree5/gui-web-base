@@ -31,10 +31,8 @@ chmod 700 "$XDG_RUNTIME_DIR"
 mkdir -p /home/guiwebuser/.xpra
 chmod 700 /home/guiwebuser/.xpra
 
-# Start PulseAudio in user mode
-pulseaudio --start --exit-idle-time=-1 --log-level=error --disallow-exit
-
-xpra start :100 \
+# (opengl=auto) - Disable OpenGL when not supported, like for alpine build for a smaller image (for OpenGL support use debian build)
+xpra seamless :100 \
     --bind-tcp=0.0.0.0:5005 \
     --html=on \
     --exit-with-children=no \
@@ -44,16 +42,16 @@ xpra start :100 \
     --socket-dir="/home/guiwebuser/.xpra" \
     --session-name="GUI web app" \
     --window-close=ignore \
+    --opengl=auto \
     --start="$APP_CMD" & XPRA_PID=$!
-
-sleep 5
 
 while kill -0 "$XPRA_PID" 2>/dev/null; do
     if ! pgrep -x "$APP_CMD" >/dev/null; then
-        echo "[WARN] $APP_NAME not found in Xpra session. Restarting..."
+        echo "[WARN] $APP_NAME not found. Restarting..."
         xpra control :100 start "$APP_CMD"
     fi
     sleep 2
 done
+
 
 echo "[ERROR] Xpra process $XPRA_PID has exited. Monitor shutting down."

@@ -12,40 +12,94 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Buildkit syntax directive
+# syntax=docker/dockerfile:1.4
+
 # ---- Base stage ----
-FROM debian:bookworm-slim AS base
+FROM debian:bookworm-slim AS debian-build
+LABEL maintainer="André Silva"
+
+ARG UID=1000
+ARG GID=1000
+ENV UID=$UID
+ENV GID=$GID
+
+# Add xpra repository
+RUN apt-get update \
+    && apt-get install -y \
+    wget \
+    && apt-get install ca-certificates \
+    && wget -O "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc \
+    && cd /etc/apt/sources.list.d ; wget "https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/bookworm/xpra.sources"
 
 RUN apt-get update \
     && apt-get install -y \
     xpra \
-    python3-dbus \
-    dbus-x11 \
-    pulseaudio \
-    pulseaudio-utils \
-    python3-pyqt5 \
-    python3-pyinotify \
-    python3-xdg \
-    xauth \
-    ffmpeg \
-    wget \
     && apt-get autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-#### CONFIGURATION FILES ####
-
-# xorg configuration
-COPY config/xorg.conf /etc/X11/xorg.conf.d/00_gui-web-base.conf
+RUN groupadd -r -g ${GID} guiwebuser \
+    && useradd -u ${UID} -g ${GID} -m -d /home/guiwebuser -s /bin/bash guiwebuser \
+    # No password login
+    #&& echo "guiwebuser:${PASSWORD}" | chpasswd && \
+    && mkdir -m 755 -p /var/lib/dbus \
+    && dbus-uuidgen > /var/lib/dbus/machine-id
 
 #### SETUP USER, DIRECTORIES AND PERMISSIONS ####
 
-# Create a non-root user to run xpra
-RUN adduser guiwebuser --disabled-password
+# Group socket directory with the correct permissions, owned by guiwebuser.
+RUN mkdir -p /run/xpra && chown guiwebuser:guiwebuser /run/xpra && chmod 775 /run/xpra
 
-# Create the /tmp/.X11-unix directory with the correct permissions. Must be owned by root, as required by X11.
-RUN mkdir -p /tmp/.X11-unix && chown root:root /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix
+# Doamin socket directory with the correct permissions, owned by guiwebuser.
+RUN mkdir -p /run/user/${UID}/xpra && chown guiwebuser:guiwebuser /run/user/${UID}/xpra && chmod 775 /run/user/${UID}/xpra
 
-# Create the XDG_RUNTIME_DIR directory with the correct permissions, owned by guiwebuser.
+COPY scripts/start.sh /usr/local/bin/start
+RUN chmod +x /usr/local/bin/start
+
+WORKDIR /home/guiwebuser
+USER guiwebuser
+
+EXPOSE 5005
+
+# Simple healthcheck to ensure xpra is running
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD wget --spider --quiet http://localhost:5005/ || exit 1
+
+CMD ["start"]
+
+FROM alpine:3.20 AS alpine-build
+LABEL maintainer="André Silva"
+
+ARG UID=1000
+ARG GID=1000
+ENV UID=$UID
+ENV GID=$GID
+
+RUN apk update && \
+    apk add --no-cache \
+    xpra \
+    dbus \
+    dbus-x11 \
+    pulseaudio \
+    pulseaudio-utils \
+    xauth
+
+RUN mkdir /usr/share/xpra/www \
+    && cd /usr/share/xpra/www \
+    && wget https://xpra.org/src/xpra-html5-17.1.tar.xz \
+    && tar -Jxf xpra-html5-17.1.tar.xz xpra-html5-17.1/html5 --strip-components=2 \
+    && rm -f xpra-html5-17.1.tar.xz
+
+RUN addgroup -g ${GID} -S guiwebuser \
+    # No password login (default with -D, no password set)
+    && adduser  -u ${UID} -G guiwebuser -h /home/guiwebuser -s /bin/bash -D guiwebuser \
+    && mkdir -m 755 -p /var/lib/dbus \
+    && dbus-uuidgen > /var/lib/dbus/machine-id
+
+#### SETUP USER, DIRECTORIES AND PERMISSIONS ####
+
+# Group socket directory with the correct permissions, owned by guiwebuser.
 RUN mkdir -p /run/xpra && chown guiwebuser:guiwebuser /run/xpra && chmod 775 /run/xpra
 
 COPY scripts/start.sh /usr/local/bin/start
@@ -65,18 +119,31 @@ CMD ["start"]
 # ---- Healthcheck test stage for CI checks (adds xclock) ----
 # This stage is used in CI to test the healthcheck functionality.
 # Will not be present in the final image, so not adding unnecessary packages to the final image.
-FROM base AS ci-healthcheck
+FROM debian-build AS ci-healthcheck-debian
 
 USER root
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends x11-apps
+    && apt-get install -y --no-install-recommends xterm
 
 USER guiwebuser
 
-CMD ["start", "xclock"]
+CMD ["start", "xterm"]
 
-# ---- Final runtime image ----
-# This is the stage used for the final image.
-# Any images inheriting from this image will not have the CI healthcheck test.
-FROM base AS runtime
+# ---- Healthcheck test stage for CI checks (adds xclock) ----
+# This stage is used in CI to test the healthcheck functionality.
+# Will not be present in the final image, so not adding unnecessary packages to the final image.
+FROM alpine-build AS ci-healthcheck-alpine
+
+USER root
+
+RUN apk update && \
+    apk add --no-cache xterm
+
+USER guiwebuser
+
+CMD ["start", "xterm"]
+
+# ---- Final build ----
+# This is the stage used for the final image (default).
+FROM debian-build AS default-build
