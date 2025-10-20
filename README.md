@@ -31,14 +31,14 @@ A Docker base image to simplify the creation of downstream containers that run L
 ## 🚀 Quick Start
 
 This image is designed to be used as a **base** for Dockerfiles.  
-Install a desired GUI app and configure `CMD ["start-app", "<app>"]` to launch it.
+Install a desired GUI app and call `CMD ["start-app", "<app>"]` to launch it.
 
 ### Example `Dockerfile`
 
 ```dockerfile
 # Prefer pinning for reproducibility (at least a major, e.g. :v1)
 # Pinning to <major>.<minor> (e.g. :v1.1) limits updates to patches only.
-FROM aandree5/gui-web-base:v1
+FROM aandree5/gui-web-base:v1.1
 
 # Install the GUI app (replacing "<app>" with the package name)
 RUN apt-get update && \
@@ -121,9 +121,6 @@ We welcome contributions! Please follow these steps to get set up:
    - `ci: workflow changes`
 
 4. **Open a Pull Request** against `main`.  
-   Our GitHub Actions workflows will:
-   - Run pre-commit checks
-   - Build and healthcheck the Docker image
 
 ## 📚 Resources
 
