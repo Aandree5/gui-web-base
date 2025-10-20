@@ -13,19 +13,25 @@
 
 A Docker base image to simplify the creation of downstream containers that run Linux GUI apps in a web browser.
 
-## ✨ Why this project?
+## ✨ Features
 
-This base image is designed to:
+- **Web-based GUI environment**  
+  Launch Linux desktop applications directly in your browser — no local installation required.
 
-- Provide a consistent, browser-accessible GUI environment for Linux applications
-- Enable seamless copy & paste between the containerized app and the browser
-- Support audio forwarding and media handling out of the box
-- Serve as a foundation for packaging GUI apps in a reproducible, maintainable way
+- **Clipboard integration**  
+  Seamless copy & paste between the containerised app and your browser.
+
+- **Audio forwarding**  
+  Built-in support for media playback and audio streaming from container to browser.
+
+- **Automatic app restart**  
+  By default, the app will relaunch automatically when its window is closed.
+
 
 ## 🚀 Quick Start
 
 This image is designed to be used as a **base** for Dockerfiles.  
-Install a desired GUI app and configure `CMD ["start", "<app>"]` to launch it.
+Install a desired GUI app and configure `CMD ["start-app", "<app>"]` to launch it.
 
 ### Example `Dockerfile`
 
@@ -42,7 +48,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Start the app via the base entrypoint
-CMD ["start", "<app>"]
+CMD ["start-app", "<app>"]
 ```
 
 ### Build and run
@@ -57,6 +63,15 @@ docker run -d -p 5005:5005 --name gui-web-app gui-web-app
 ```
 
 Then open [http://localhost:5005](http://localhost:5005) in the browser.
+
+## ⚙️ Configuration
+
+- **App restart**  
+  Closing the app window triggers an automatic restart by default. Pass `--no-restart` to disable this feature.
+
+  ```dockerfile
+  CMD ["start-app", "--no-restart", "<app>"]
+  ```
 
 ## 🏷️ Versioning & Tags
 
