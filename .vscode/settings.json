@@ -9,7 +9,13 @@
     "cSpell.words": [
         "autoremove",
         "dbus",
+        "getent",
+        "gosu",
+        "guiwebbase",
         "guiwebuser",
+        "keyrings",
+        "noninteractive",
+        "opengl",
         "pulseaudio",
         "uuidgen",
         "xauth",

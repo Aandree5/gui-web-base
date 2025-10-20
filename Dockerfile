@@ -19,15 +19,15 @@
 FROM debian:bookworm-slim AS debian-build
 
 LABEL org.opencontainers.image.authors="Aandree5" \
-      org.opencontainers.image.license="Apache-2.0" \
-      org.opencontainers.image.url="https://github.com/Aandree5/gui-web-base" \
-      org.opencontainers.image.title="GUI web base" \
-      org.opencontainers.image.description="Base image for running Linux GUI applications over the web"
+    org.opencontainers.image.license="Apache-2.0" \
+    org.opencontainers.image.url="https://github.com/Aandree5/gui-web-base" \
+    org.opencontainers.image.title="GUI web base" \
+    org.opencontainers.image.description="Base image for running Linux GUI applications over the web"
 
-ARG UID=1000
-ARG GID=1000
-ENV UID=$UID
-ENV GID=$GID
+ARG GWB_UID=1000
+ARG GWB_GID=1000
+ENV GWB_UID=$GWB_UID
+ENV GWB_GID=$GWB_GID
 
 # Add xpra repository
 RUN apt-get update \
@@ -39,7 +39,9 @@ RUN apt-get update \
 
 # xpra packages: https://github.com/Xpra-org/xpra/blob/master/docs/Build/Packaging.md
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    dumb-init \
+    gosu \
     xpra \
     xpra-common \
     xpra-server \
@@ -55,24 +57,26 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN groupadd -r -g ${GID} guiwebuser \
-    && useradd -u ${UID} -g ${GID} -m -d /home/guiwebuser -s /bin/bash guiwebuser \
-    && mkdir -m 755 -p /var/lib/dbus 
+RUN groupadd -r -g ${GWB_GID} guiwebbase \
+    && useradd -u ${GWB_UID} -g ${GWB_GID} -m -d /home/guiwebbase -s /bin/bash guiwebbase
 
 # Socket directory with the correct permissions, owned by guiwebuser.
-RUN mkdir -p /run/user/${UID}/xpra \
-    && chown guiwebuser:guiwebuser /run/user/${UID}/xpra \
-    && chmod 700 /run/user/${UID}/xpra \
+RUN mkdir -m 755 -p /var/lib/dbus \
+    && mkdir -p /gwb/xpra \
+    && chown ${GWB_UID}:${GWB_GID} /gwb/xpra \
+    && chmod 700 /gwb/xpra \
     && dbus-uuidgen > /var/lib/dbus/machine-id
 
-COPY scripts/start-app.sh /usr/local/bin/start-app
+ENV XDG_RUNTIME_DIR="/gwb/xpra"
+
+COPY --chown=${GWB_UID}:${GWB_GID} scripts/start-app.sh /usr/local/bin/start-app
 RUN chmod +x /usr/local/bin/start-app
 
-COPY scripts/watch-app.sh /usr/local/bin/watch-app
+COPY --chown=${GWB_UID}:${GWB_GID} scripts/watch-app.sh /usr/local/bin/watch-app
 RUN chmod +x /usr/local/bin/watch-app
 
-WORKDIR /home/guiwebuser
-USER guiwebuser
+COPY --chown=${GWB_UID}:${GWB_GID} scripts/entrypoint.sh /gwb/entrypoint.sh
+RUN chmod +x /gwb/entrypoint.sh
 
 EXPOSE 5005
 
@@ -80,21 +84,17 @@ EXPOSE 5005
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD wget --spider --quiet http://localhost:5005/ || exit 1
 
+ENTRYPOINT ["/gwb/entrypoint.sh"]
 CMD ["start-app"]
 
 # ---- Healthcheck test stage for CI checks (adds xclock) ----
 # This stage is used in CI to test the healthcheck functionality.
 FROM debian-build AS ci-healthcheck
 
-USER root
-
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends x11-apps
-
-USER guiwebuser
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends x11-apps
 
 CMD ["start-app", "xclock"]
-
 
 # ---- Final stage ----
 # This is the stage used for the final image (default).
