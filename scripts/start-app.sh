@@ -16,8 +16,8 @@
 RESTART_FLAG=""
 
 if [ "$1" = "--no-restart" ]; then
-  RESTART_FLAG="--no-restart"
-  shift
+    RESTART_FLAG="--no-restart"
+    shift
 fi
 
 # Require an app command as the first argument
@@ -30,18 +30,14 @@ fi
 APP_CMD="$1"
 APP_NAME=$(basename "$APP_CMD")
 
-export XDG_RUNTIME_DIR="/home/guiwebuser/.xdg"
-mkdir -p "$XDG_RUNTIME_DIR"
-chmod 700 "$XDG_RUNTIME_DIR"
-
 # (opengl=auto) - Disable OpenGL when not supported, like for alpine build for a smaller image (for OpenGL support use debian build)
 xpra seamless :100 \
-    --bind-tcp=0.0.0.0:5005 \
-    --html=on \
-    --exit-with-children=no \
-    --daemon=no \
-    --socket-dirs="/home/guiwebuser/.xpra" \
-    --session-name="GUI web app" \
-    --window-close=ignore \
-    --opengl=auto \
-    --start="watch-app $RESTART_FLAG -- $APP_CMD"
+  --bind-tcp=0.0.0.0:5005 \
+  --html=on \
+  --exit-with-children=no \
+  --daemon=no \
+  --session-name="GUI web app" \
+  --socket-dirs=$XDG_RUNTIME_DIR \
+  --window-close=ignore \
+  --opengl=auto \
+  --start="watch-app $RESTART_FLAG -- $APP_CMD"
