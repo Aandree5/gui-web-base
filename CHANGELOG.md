@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.1](https://github.com/Aandree5/gui-web-base/compare/v1.3.0...v1.3.1) (2025-10-20)
+
+
+### Bug Fixes
+
+* non-root user flow ([#43](https://github.com/Aandree5/gui-web-base/issues/43)) ([c0ad910](https://github.com/Aandree5/gui-web-base/commit/c0ad910ab6b3c9bc4f9fa42566a412f396de404e))
+
 ## [1.3.0](https://github.com/Aandree5/gui-web-base/compare/v1.2.1...v1.3.0) (2025-10-20)
 
 
