@@ -13,11 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+RESTART_FLAG=""
+
+if [ "$1" = "--no-restart" ]; then
+  RESTART_FLAG="--no-restart"
+  shift
+fi
 
 # Require an app command as the first argument
 if [ -z "$1" ]; then
     echo "[ERROR] No application command provided."
-    echo "Usage: $0 <app_command>"
+    echo "Usage: $0 [--no-restart] <app_command> [args...]"
     exit 1
 fi
 
@@ -28,30 +34,14 @@ export XDG_RUNTIME_DIR="/home/guiwebuser/.xdg"
 mkdir -p "$XDG_RUNTIME_DIR"
 chmod 700 "$XDG_RUNTIME_DIR"
 
-mkdir -p /home/guiwebuser/.xpra
-chmod 700 /home/guiwebuser/.xpra
-
 # (opengl=auto) - Disable OpenGL when not supported, like for alpine build for a smaller image (for OpenGL support use debian build)
 xpra seamless :100 \
     --bind-tcp=0.0.0.0:5005 \
     --html=on \
     --exit-with-children=no \
-    --mdns=no \
-    --webcam=no \
     --daemon=no \
-    --socket-dir="/home/guiwebuser/.xpra" \
+    --socket-dirs="/home/guiwebuser/.xpra" \
     --session-name="GUI web app" \
     --window-close=ignore \
     --opengl=auto \
-    --start="$APP_CMD" & XPRA_PID=$!
-
-while kill -0 "$XPRA_PID" 2>/dev/null; do
-    if ! pgrep -x "$APP_CMD" >/dev/null; then
-        echo "[WARN] $APP_NAME not found. Restarting..."
-        xpra control :100 start "$APP_CMD"
-    fi
-    sleep 2
-done
-
-
-echo "[ERROR] Xpra process $XPRA_PID has exited. Monitor shutting down."
+    --start="watch-app $RESTART_FLAG -- $APP_CMD"

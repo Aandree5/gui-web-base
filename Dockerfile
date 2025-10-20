@@ -17,7 +17,12 @@
 
 # ---- Base stage ----
 FROM debian:bookworm-slim AS debian-build
-LABEL maintainer="André Silva"
+
+LABEL org.opencontainers.image.authors="Aandree5" \
+      org.opencontainers.image.license="Apache-2.0" \
+      org.opencontainers.image.url="https://github.com/Aandree5/gui-web-base" \
+      org.opencontainers.image.title="GUI web base" \
+      org.opencontainers.image.description="Base image for running Linux GUI applications over the web"
 
 ARG UID=1000
 ARG GID=1000
@@ -26,36 +31,45 @@ ENV GID=$GID
 
 # Add xpra repository
 RUN apt-get update \
-    && apt-get install -y \
+    && apt-get install -y --no-install-recommends \
     wget \
-    && apt-get install ca-certificates \
+    ca-certificates \
     && wget -O "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc \
     && cd /etc/apt/sources.list.d ; wget "https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/bookworm/xpra.sources"
 
+# xpra packages: https://github.com/Xpra-org/xpra/blob/master/docs/Build/Packaging.md
 RUN apt-get update \
-    && apt-get install -y \
+    && apt-get install -y --no-install-recommends \
     xpra \
-    && apt-get autoremove \
+    xpra-common \
+    xpra-server \
+    xpra-x11 \
+    xpra-codecs \
+    xpra-html5 \
+    xpra-audio \
+    dbus \
+    dbus-x11 \
+    pulseaudio \
+    xauth \
+    && apt-get autoremove -y --purge \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -r -g ${GID} guiwebuser \
     && useradd -u ${UID} -g ${GID} -m -d /home/guiwebuser -s /bin/bash guiwebuser \
-    # No password login
-    #&& echo "guiwebuser:${PASSWORD}" | chpasswd && \
-    && mkdir -m 755 -p /var/lib/dbus \
+    && mkdir -m 755 -p /var/lib/dbus 
+
+# Socket directory with the correct permissions, owned by guiwebuser.
+RUN mkdir -p /run/user/${UID}/xpra \
+    && chown guiwebuser:guiwebuser /run/user/${UID}/xpra \
+    && chmod 700 /run/user/${UID}/xpra \
     && dbus-uuidgen > /var/lib/dbus/machine-id
 
-#### SETUP USER, DIRECTORIES AND PERMISSIONS ####
+COPY scripts/start-app.sh /usr/local/bin/start-app
+RUN chmod +x /usr/local/bin/start-app
 
-# Group socket directory with the correct permissions, owned by guiwebuser.
-RUN mkdir -p /run/xpra && chown guiwebuser:guiwebuser /run/xpra && chmod 775 /run/xpra
-
-# Doamin socket directory with the correct permissions, owned by guiwebuser.
-RUN mkdir -p /run/user/${UID}/xpra && chown guiwebuser:guiwebuser /run/user/${UID}/xpra && chmod 775 /run/user/${UID}/xpra
-
-COPY scripts/start.sh /usr/local/bin/start
-RUN chmod +x /usr/local/bin/start
+COPY scripts/watch-app.sh /usr/local/bin/watch-app
+RUN chmod +x /usr/local/bin/watch-app
 
 WORKDIR /home/guiwebuser
 USER guiwebuser
@@ -66,84 +80,22 @@ EXPOSE 5005
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD wget --spider --quiet http://localhost:5005/ || exit 1
 
-CMD ["start"]
-
-FROM alpine:3.20 AS alpine-build
-LABEL maintainer="André Silva"
-
-ARG UID=1000
-ARG GID=1000
-ENV UID=$UID
-ENV GID=$GID
-
-RUN apk update && \
-    apk add --no-cache \
-    xpra \
-    dbus \
-    dbus-x11 \
-    pulseaudio \
-    pulseaudio-utils \
-    xauth
-
-RUN mkdir /usr/share/xpra/www \
-    && cd /usr/share/xpra/www \
-    && wget https://xpra.org/src/xpra-html5-17.1.tar.xz \
-    && tar -Jxf xpra-html5-17.1.tar.xz xpra-html5-17.1/html5 --strip-components=2 \
-    && rm -f xpra-html5-17.1.tar.xz
-
-RUN addgroup -g ${GID} -S guiwebuser \
-    # No password login (default with -D, no password set)
-    && adduser  -u ${UID} -G guiwebuser -h /home/guiwebuser -s /bin/bash -D guiwebuser \
-    && mkdir -m 755 -p /var/lib/dbus \
-    && dbus-uuidgen > /var/lib/dbus/machine-id
-
-#### SETUP USER, DIRECTORIES AND PERMISSIONS ####
-
-# Group socket directory with the correct permissions, owned by guiwebuser.
-RUN mkdir -p /run/xpra && chown guiwebuser:guiwebuser /run/xpra && chmod 775 /run/xpra
-
-COPY scripts/start.sh /usr/local/bin/start
-RUN chmod +x /usr/local/bin/start
-
-WORKDIR /home/guiwebuser
-USER guiwebuser
-
-EXPOSE 5005
-
-# Simple healthcheck to ensure xpra is running
-HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD wget --spider --quiet http://localhost:5005/ || exit 1
-
-CMD ["start"]
+CMD ["start-app"]
 
 # ---- Healthcheck test stage for CI checks (adds xclock) ----
 # This stage is used in CI to test the healthcheck functionality.
-# Will not be present in the final image, so not adding unnecessary packages to the final image.
-FROM debian-build AS ci-healthcheck-debian
+FROM debian-build AS ci-healthcheck
 
 USER root
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends xterm
+    && apt-get install -y --no-install-recommends x11-apps
 
 USER guiwebuser
 
-CMD ["start", "xterm"]
+CMD ["start-app", "xclock"]
 
-# ---- Healthcheck test stage for CI checks (adds xclock) ----
-# This stage is used in CI to test the healthcheck functionality.
-# Will not be present in the final image, so not adding unnecessary packages to the final image.
-FROM alpine-build AS ci-healthcheck-alpine
 
-USER root
-
-RUN apk update && \
-    apk add --no-cache xterm
-
-USER guiwebuser
-
-CMD ["start", "xterm"]
-
-# ---- Final build ----
+# ---- Final stage ----
 # This is the stage used for the final image (default).
-FROM debian-build AS default-build
+FROM debian-build
