@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/Aandree5/gui-web-base/compare/v1.2.1...v1.3.0) (2025-10-20)
+
+
+### Features
+
+* upgrade xpra to install from their repo ([#40](https://github.com/Aandree5/gui-web-base/issues/40)) ([c491024](https://github.com/Aandree5/gui-web-base/commit/c49102408c3b5d70084a7a7e6916424296717d9b))
+
 ## [1.2.1](https://github.com/Aandree5/gui-web-base/compare/v1.2.0...v1.2.1) (2025-10-18)
 
 
