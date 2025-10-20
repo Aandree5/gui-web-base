@@ -87,6 +87,11 @@ jobs:
             type=raw,value=${{ steps.version.outputs.MAJOR }}
             type=raw,value=${{ steps.version.outputs.MINOR }}
             type=ref,event=tag
+          labels: |
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ steps.version.outputs.TAG }}
+            org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
+            org.opencontainers.image.license=Apache-2.0
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
