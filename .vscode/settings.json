@@ -5,5 +5,15 @@
             "file:///c%3A/.STF/projects/gui-web-base/.github/ISSUE_TEMPLATE/2-feature_request.yml",
             "file:///c%3A/.STF/projects/gui-web-base/.github/ISSUE_TEMPLATE/1-bug_report.yml"
         ]
-    }
+    },
+    "cSpell.words": [
+        "autoremove",
+        "dbus",
+        "guiwebuser",
+        "pulseaudio",
+        "uuidgen",
+        "xauth",
+        "xclock",
+        "xpra"
+    ]
 }

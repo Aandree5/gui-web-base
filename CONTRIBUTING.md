@@ -1,6 +1,6 @@
 # Contributing to gui-web-base
 
-We’re excited that you want to contribute! This document outlines how to engage with the project and community in a respectful and productive way.
+Thank you for your interest in contributing! This document provides guidance on how to participate in the project and engage with the community respectfully and effectively.
 
 ## 🧩 Creating Good Issues
 
@@ -10,8 +10,8 @@ We’re excited that you want to contribute! This document outlines how to engag
 
 ## 🔀 Submitting Pull Requests
 
-- **Branching**: Create a feature branch from `main` (e.g., `feat/add-logging`).
-- **Conventional Commits**: All commits must follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
+- **Branching**: Create a branch from `main` (e.g., `feat/add-logging`).
+- **Conventional Commits**: Commits should follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
   - `feat:` for new features
   - `fix:` for bug fixes
   - `docs:` for documentation changes
@@ -30,12 +30,12 @@ We’re excited that you want to contribute! This document outlines how to engag
 - **Respectful communication**: Assume good intent, be constructive, and stay professional.
 - **Collaboration over competition**: We value shared learning and collective improvement.
 - **Inclusive environment**: Everyone is welcome regardless of background or experience.
-- **Transparency**: Discuss major changes in issues before opening a PR.
+- **Transparency**: Discuss major changes before opening a PR.
 
 ## 💡 Tips for First-Time Contributors
 
 - Start with issues labeled `good first issue` or `help wanted`.
-- Don’t worry about perfection — maintainers will help refine your contribution.
+- Don’t worry about perfection, maintainers will help refine your contribution.
 - Ask questions in issues or discussions if you’re unsure.
 
-Thanks for helping us make **gui-web-base** better for everyone!
+Thanks for helping make **gui-web-base** better for everyone!
