@@ -77,10 +77,25 @@ docker run -d -p 5005:5005 gui-web-xterm
   ```
 
 - **Application directories (`APP_DIRS`)**  
-Directories defined in `APP_DIRS`, as a space‑separated list, are created if missing and assigned to the runtime user.
+  Directories defined in `APP_DIRS`, as a space‑separated list, are created if missing and assigned to the runtime user.
 
   ```dockerfile
   ENV APP_DIRS="/myapp/config /var/cache/myapp"
+  ```
+
+- **User home (`GWB_HOME`)**  
+  `GWB_HOME` points to the runtime user’s home directory.  
+
+  ```dockerfile
+  # Usage on a downstream image
+  ENV SOME_PATH="$GWB_HOME/myapp/config"
+  ```  
+  
+  It can also be set at build time with a `--build-arg`.
+  
+  ```bash
+  # Override at build time
+  docker build --build-arg GWB_HOME=/myapp -t myapp-image .
   ```
 
 ## 🏷️ Versioning & Tags
