@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/Aandree5/gui-web-base/compare/v1.4.0...v1.5.0) (2025-10-21)
+
+
+### Features
+
+* added functionality to get runtime user home dir on downstream … ([#53](https://github.com/Aandree5/gui-web-base/issues/53)) ([4b3b3f9](https://github.com/Aandree5/gui-web-base/commit/4b3b3f9919b98f1535d687eb31a32a07d4e0b6c1))
+
 ## [1.4.0](https://github.com/Aandree5/gui-web-base/compare/v1.3.1...v1.4.0) (2025-10-21)
 
 
