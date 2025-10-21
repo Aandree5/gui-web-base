@@ -1,4 +1,4 @@
-# GUI Web Base
+# GUI web Base
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/Aandree5/gui-web-base/refs/heads/main/images/logo_128.png" alt="Logo" />
