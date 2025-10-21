@@ -31,7 +31,7 @@ ENV GWB_GID=$GWB_GID
 
 # Add xpra repository
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     wget \
     ca-certificates \
     && wget -O "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc \
@@ -57,10 +57,10 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN groupadd -r -g ${GWB_GID} guiwebbase \
-    && useradd -u ${GWB_UID} -g ${GWB_GID} -m -d /home/guiwebbase -s /bin/bash guiwebbase
+RUN groupadd -r -g ${GWB_GID} gwb \
+    && useradd -u ${GWB_UID} -g ${GWB_GID} -m -d /home/gwb -s /bin/bash gwb
 
-# Socket directory with the correct permissions, owned by guiwebuser.
+# Socket directory with the correct permissions, owned by gwb.
 RUN mkdir -m 755 -p /var/lib/dbus \
     && mkdir -p /gwb/xpra \
     && chown ${GWB_UID}:${GWB_GID} /gwb/xpra \

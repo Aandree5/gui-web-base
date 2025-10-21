@@ -1,4 +1,4 @@
-# GUI Web base
+# GUI web base
 
 <div align="center">
   <img src="images/logo_256.png" alt="Logo" />
@@ -69,12 +69,18 @@ docker run -d -p 5005:5005 gui-web-xterm
   CMD ["start-app", "--no-restart", "<app>"]
   ```
 
-- **Runtime UID/GID (PUID / PGID)**  
-  Change the runtime user and group by setting PUID and PGID environment variables when starting the container.
+- **Runtime UID/GID (`PUID` / `PGID`)**  
+  Changing the runtime user and group is possible by setting PUID and PGID environment variables when starting the container.
 
   ```bash
-  # Run with custom UID/GID
   docker run -d -p 5005:5005 -e PUID=1000 -e PGID=1000 gui-web-xterm
+  ```
+
+- **Application directories (`APP_DIRS`)**  
+Directories defined in `APP_DIRS`, as a space‑separated list, are created if missing and assigned to the runtime user.
+
+  ```dockerfile
+  ENV APP_DIRS="/myapp/config /var/cache/myapp"
   ```
 
 ## 🏷️ Versioning & Tags
