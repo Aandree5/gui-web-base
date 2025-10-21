@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/Aandree5/gui-web-base/compare/v1.3.1...v1.4.0) (2025-10-21)
+
+
+### Features
+
+* added application directories functionality ([#50](https://github.com/Aandree5/gui-web-base/issues/50)) ([05bc921](https://github.com/Aandree5/gui-web-base/commit/05bc92136e0a44a75dcb25982a4a918cf79603aa))
+
 ## [1.3.1](https://github.com/Aandree5/gui-web-base/compare/v1.3.0...v1.3.1) (2025-10-20)
 
 
