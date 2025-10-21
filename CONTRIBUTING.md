@@ -1,4 +1,4 @@
-# Contributing to gui-web-base
+# Contributing to GUI Web base
 
 Thank you for your interest in contributing! This document provides guidance on how to participate in the project and engage with the community respectfully and effectively.
 
@@ -38,4 +38,4 @@ Thank you for your interest in contributing! This document provides guidance on 
 - Don’t worry about perfection, maintainers will help refine your contribution.
 - Ask questions in issues or discussions if you’re unsure.
 
-Thanks for helping make **gui-web-base** better for everyone!
+Thanks for helping make **GUI Web base** better for everyone!
