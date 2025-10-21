@@ -30,4 +30,4 @@ body:
     attributes:
       label: Proposed Implementation
       placeholder: |
-        Modify `set_webpage_title` to optionally include `Hostname` as an optional paramerter.
+        Modify `set_webpage_title` to optionally include `Hostname` as an optional parameter.
