@@ -28,6 +28,7 @@ ARG GWB_UID=1000
 ARG GWB_GID=1000
 ENV GWB_UID=$GWB_UID
 ENV GWB_GID=$GWB_GID
+ENV GWB_HOME="/home/gwb"
 
 # Add xpra repository
 RUN apt-get update \
@@ -58,7 +59,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -r -g ${GWB_GID} gwb \
-    && useradd -u ${GWB_UID} -g ${GWB_GID} -m -d /home/gwb -s /bin/bash gwb
+    && useradd -u ${GWB_UID} -g ${GWB_GID} -m -d $GWB_HOME -s /bin/bash gwb
 
 # Socket directory with the correct permissions, owned by gwb.
 RUN mkdir -m 755 -p /var/lib/dbus \

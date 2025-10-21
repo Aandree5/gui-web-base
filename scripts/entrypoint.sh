@@ -27,7 +27,7 @@ CURRENT_GID=$(id -g gwb || echo -1)
 # Directories to fix permissions for downstream image
 export APP_DIRS=""
 # All directories to fix permissions
-PERMISSIONS_DIRS="/home/gwb ${XDG_RUNTIME_DIR} ${APP_DIRS}"
+PERMISSIONS_DIRS="${GWB_HOME} ${XDG_RUNTIME_DIR} ${APP_DIRS}"
 
 echo "Current UID:GID = ${CURRENT_UID:-<missing>}:${CURRENT_GID:-<missing>}"
 echo "Target UID:GID = ${PUID}:${PGID}"
@@ -63,7 +63,7 @@ if [ "${CURRENT_UID}" != "${PUID}" ] || [ "${CURRENT_GID}" != "${PGID}" ]; then
             usermod -u "${PUID}" -g "${PGID}" "gwb"
         else
             echo "Creating user gwb with UID:${PUID} GID:${PGID}"
-            useradd -m -u "${PUID}" -g "${PGID}" -d "/home/gwb" -s /bin/sh gwb
+            useradd -m -u "${PUID}" -g "${PGID}" -d "${GWB_HOME}" -s /bin/sh gwb
         fi
     fi
     
