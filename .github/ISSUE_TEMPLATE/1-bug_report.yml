@@ -1,5 +1,5 @@
 name: 🐞 Bug Report
-description: Report a reproducible issue with the GUI web base image
+description: Report a reproducible issue with the project
 title: "[Bug]: "
 labels: [bug]
 assignees:
