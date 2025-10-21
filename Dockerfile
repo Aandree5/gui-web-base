@@ -26,9 +26,10 @@ LABEL org.opencontainers.image.authors="Aandree5" \
 
 ARG GWB_UID=1000
 ARG GWB_GID=1000
+ARG GWB_HOME="/home/gwb"
 ENV GWB_UID=$GWB_UID
 ENV GWB_GID=$GWB_GID
-ENV GWB_HOME="/home/gwb"
+ENV GWB_HOME=$GWB_HOME
 
 # Add xpra repository
 RUN apt-get update \
