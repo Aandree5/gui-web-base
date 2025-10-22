@@ -17,6 +17,7 @@
         "noninteractive",
         "opengl",
         "pulseaudio",
+        "signkey",
         "uuidgen",
         "xauth",
         "xclock",

@@ -15,6 +15,18 @@
 # Buildkit syntax directive
 # syntax=docker/dockerfile:1.4
 
+
+# Generate self-signed certificate for https
+FROM debian:bookworm-slim AS self-signed-certificate
+RUN apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    openssl
+
+RUN openssl genrsa -out server.key 2048 \
+    && openssl req -new -key server.key -out server.csr -subj "/CN=localhost" \
+    && openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt \
+    && cat server.key server.crt > server.pem
+
 # ---- Base stage ----
 FROM debian:bookworm-slim AS debian-build
 
@@ -79,6 +91,9 @@ RUN chmod +x /usr/local/bin/watch-app
 
 COPY --chown=${GWB_UID}:${GWB_GID} scripts/entrypoint.sh /gwb/entrypoint.sh
 RUN chmod +x /gwb/entrypoint.sh
+
+# Set certificate from previous stage
+COPY --from=self-signed-certificate server.pem /etc/xpra/ssl/ssl-cert.pem
 
 EXPOSE 5005
 
