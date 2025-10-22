@@ -27,65 +27,77 @@ CURRENT_GID=$(id -g gwb || echo -1)
 # Directories to fix permissions for downstream image
 export APP_DIRS=""
 # All directories to fix permissions
-PERMISSIONS_DIRS="${GWB_HOME} ${XDG_RUNTIME_DIR} ${APP_DIRS}"
+PERMISSIONS_DIRS="$GWB_HOME $XDG_RUNTIME_DIR $APP_DIRS"
 
 echo "Current UID:GID = ${CURRENT_UID:-<missing>}:${CURRENT_GID:-<missing>}"
-echo "Target UID:GID = ${PUID}:${PGID}"
+echo "Target UID:GID = $PUID:$PGID"
 
 TARGET_USER="gwb"
 TARGET_GROUP="gwb"
 
+fix_dirs_permissions() {
+    for d in $PERMISSIONS_DIRS; do
+        if [ -e "$d" ]; then
+            dir_uid=$(stat -c '%u' "$d")
+            dir_gid=$(stat -c '%g' "$d")
+            
+            if [ "$dir_uid" != "$PUID" ] || [ "$dir_gid" != "$PGID" ]; then
+                echo "Fixing ownership for $d (was $dir_uid:$dir_gid, needs $PUID:$PGID)"
+                if ! chown -R "$PUID:$PGID" "$d"; then
+                    echo "ERROR: failed to set ownership on $d to $PUID:$PGID" >&2
+                    exit 1
+                fi
+            fi
+        else
+            echo "Creating $d owned by $PUID:$PGID"
+            mkdir -p "$d"
+            chown "$PUID:$PGID" "$d"
+            chmod 700 "$d"
+        fi
+    done
+}
+
 # Update permissions only if current UID or GID differ from target
-if [ "${CURRENT_UID}" != "${PUID}" ] || [ "${CURRENT_GID}" != "${PGID}" ]; then
+if [ "$CURRENT_UID" != "$PUID" ] || [ "$CURRENT_GID" != "$PGID" ]; then
     # Ensure group exists for PGID (create if missing)
-    if getent group "${PGID}" >/dev/null 2>&1; then
-        TARGET_GROUP=$(getent group "${PGID}" | cut -d: -f1)
-        echo "Using existing group ${TARGET_GROUP} (GID ${PGID})"
+    if getent group "$PGID" >/dev/null 2>&1; then
+        TARGET_GROUP=$(getent group "$PGID" | cut -d: -f1)
+        echo "Using existing group $TARGET_GROUP (GID $PGID)"
     else
         # If gwb exists, modify it, otherwise create new user
-        if [ "${CURRENT_GID}" -ge 0 ]; then
-            echo "Modifying existing group gwb to GID:${PGID}"
-            groupmod -g "${PGID}" "gwb"
+        if [ "$CURRENT_GID" -ge 0 ]; then
+            echo "Modifying existing group gwb to GID:$PGID"
+            groupmod -g "$PGID" "gwb"
         else
-            echo "Creating group ${TARGET_GROUP} with GID ${PGID}"
-            groupadd -g "${PGID}" "${TARGET_GROUP}"
+            echo "Creating group $TARGET_GROUP with GID $PGID"
+            groupadd -g "$PGID" "$TARGET_GROUP"
         fi
     fi
     
     # Ensure a user exists with the target PUID
-    if getent passwd "${PUID}" >/dev/null 2>&1; then
-        TARGET_USER=$(getent passwd "${PUID}" | cut -d: -f1)
-        echo "Found existing user ${TARGET_USER} with UID ${PUID}"
+    if getent passwd "$PUID" >/dev/null 2>&1; then
+        TARGET_USER=$(getent passwd "$PUID" | cut -d: -f1)
+        echo "Found existing user $TARGET_USER with UID $PUID"
     else
         # If gwb exists, modify it, otherwise create new user
-        if [ "${CURRENT_UID}" -ge 0 ]; then
-            echo "Modifying existing user gwb to UID:${PUID} GID:${PGID}"
-            usermod -u "${PUID}" -g "${PGID}" "gwb"
+        if [ "$CURRENT_UID" -ge 0 ]; then
+            echo "Modifying existing user gwb to UID:$PUID GID:$PGID"
+            usermod -u "$PUID" -g "$PGID" "gwb"
         else
-            echo "Creating user gwb with UID:${PUID} GID:${PGID}"
-            useradd -m -u "${PUID}" -g "${PGID}" -d "${GWB_HOME}" -s /bin/sh gwb
+            echo "Creating user gwb with UID:$PUID GID:$PGID"
+            useradd -m -u "$PUID" -g "$PGID" -d "$GWB_HOME" -s /bin/sh gwb
         fi
     fi
     
     # Fix ownership of directories
-    for d in ${PERMISSIONS_DIRS}; do
-        if [ -e "${d}" ]; then
-            echo "Fixing ownership for ${d} -> ${PUID}:${PGID}"
-            
-            if ! chown -R "${PUID}:${PGID}" "${d}"; then
-                echo "ERROR: failed to set ownership on ${d} to ${PUID}:${PGID}" >&2
-                exit 1
-            fi
-        else
-            echo "Creating ${d} owned by ${PUID}:${PGID}"
-            mkdir -p "${d}"
-            chown "${PUID}:${PGID}" "${d}"
-            chmod 700 "${d}"
-        fi
-    done
+    fix_dirs_permissions
 else
-    TARGET_USER=$(getent passwd "${PUID}" | cut -d: -f1)
+    TARGET_USER=$(getent passwd "$PUID" | cut -d: -f1)
+    
+    # Check PERMISSIONS_DIRS even if UID/GID are unchanged
+    # Make sure ownership is correct
+    fix_dirs_permissions
 fi
 
-echo "Executing as ${TARGET_USER}"
-exec dumb-init -- gosu "${TARGET_USER}" "$@"
+echo "Executing as $TARGET_USER"
+exec dumb-init -- gosu "$TARGET_USER" "$@"
