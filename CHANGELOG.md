@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/Aandree5/gui-web-base/compare/v1.5.0...v1.5.1) (2025-10-22)
+
+
+### Bug Fixes
+
+* corrected permissions flow ([#55](https://github.com/Aandree5/gui-web-base/issues/55)) ([25a8bd0](https://github.com/Aandree5/gui-web-base/commit/25a8bd0847c975c4a50c9eaa82db8c1e48f688b7))
+
 ## [1.5.0](https://github.com/Aandree5/gui-web-base/compare/v1.4.0...v1.5.0) (2025-10-21)
 
 
