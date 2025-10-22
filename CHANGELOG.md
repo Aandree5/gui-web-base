@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.3](https://github.com/Aandree5/gui-web-base/compare/v1.5.2...v1.5.3) (2025-10-22)
+
+
+### Bug Fixes
+
+* added self-signed certificate for https ([#60](https://github.com/Aandree5/gui-web-base/issues/60)) ([890bcb0](https://github.com/Aandree5/gui-web-base/commit/890bcb0ad2868f43fd00ea550c07f9d14200f92b))
+* 
+
 ## [1.5.2](https://github.com/Aandree5/gui-web-base/compare/v1.5.1...v1.5.2) (2025-10-22)
 
 
