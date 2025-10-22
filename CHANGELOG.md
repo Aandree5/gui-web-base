@@ -1,5 +1,45 @@
 # Changelog
 
+## [1.6.0](https://github.com/Aandree5/gui-web-base/compare/v1.5.2...v1.6.0) (2025-10-22)
+
+
+### Features
+
+* add webpage title override ([fd8bb12](https://github.com/Aandree5/gui-web-base/commit/fd8bb128812614675c9f073b5a8e1ad8e86340f8))
+* added application directories functionality ([#50](https://github.com/Aandree5/gui-web-base/issues/50)) ([a56447a](https://github.com/Aandree5/gui-web-base/commit/a56447a1650c59fabb30ee430bd2c9f5e6a6b0f1))
+* added functionality to get runtime user home dir on downstream … ([#53](https://github.com/Aandree5/gui-web-base/issues/53)) ([5c41203](https://github.com/Aandree5/gui-web-base/commit/5c4120355ddf657c0a1990362209d3695ca1b79e))
+* added release please workflow ([2430fc8](https://github.com/Aandree5/gui-web-base/commit/2430fc8e503aff982ba6aaa9a29cc5ad689e1455))
+* configure favicon ([009c97c](https://github.com/Aandree5/gui-web-base/commit/009c97ce629caff42ba588f8a7f760c571166dc8))
+* favicon configuration ([#33](https://github.com/Aandree5/gui-web-base/issues/33)) ([009c97c](https://github.com/Aandree5/gui-web-base/commit/009c97ce629caff42ba588f8a7f760c571166dc8))
+* upgrade xpra to install from their repo ([#40](https://github.com/Aandree5/gui-web-base/issues/40)) ([baf0603](https://github.com/Aandree5/gui-web-base/commit/baf06033a08bcc43177955945045b6ab9e30a3a7))
+
+
+### Bug Fixes
+
+* `APPS_DIRS` overriding downstream image values ([#57](https://github.com/Aandree5/gui-web-base/issues/57)) ([f95b1b5](https://github.com/Aandree5/gui-web-base/commit/f95b1b52ae31ddd3b08a17bc26d27e6ac555e958))
+* add token to workflow ([#5](https://github.com/Aandree5/gui-web-base/issues/5)) ([649d21c](https://github.com/Aandree5/gui-web-base/commit/649d21ca64a05c89092be6154f0b2d91e6e72675))
+* added missing manifest file ([#7](https://github.com/Aandree5/gui-web-base/issues/7)) ([2570b0f](https://github.com/Aandree5/gui-web-base/commit/2570b0ff7c77092bd27b698fe4fb6f9c22c24203))
+* added self-signed certificate for https ([#60](https://github.com/Aandree5/gui-web-base/issues/60)) ([890bcb0](https://github.com/Aandree5/gui-web-base/commit/890bcb0ad2868f43fd00ea550c07f9d14200f92b))
+* app watchdog ([632980c](https://github.com/Aandree5/gui-web-base/commit/632980c969c141d674da22ed3ab96d5dc466318e))
+* app watchdog ([8023e14](https://github.com/Aandree5/gui-web-base/commit/8023e14a7e8243b7272de714cba37274ba2bc85a))
+* app watchdog monitor ([bc5f111](https://github.com/Aandree5/gui-web-base/commit/bc5f1117e872f8adba6aa6435fb9d94e3276b1e1))
+* corrected permissions flow ([#55](https://github.com/Aandree5/gui-web-base/issues/55)) ([e14f72b](https://github.com/Aandree5/gui-web-base/commit/e14f72b83dcb18602d03a2bf1faf504df98fa631))
+* default webpage title not working ([#31](https://github.com/Aandree5/gui-web-base/issues/31)) ([1bdebed](https://github.com/Aandree5/gui-web-base/commit/1bdebed2a3a96b00caae447ed82df8a7322e64cb))
+* entrypoint file path ([326f5cb](https://github.com/Aandree5/gui-web-base/commit/326f5cb185a69142c48ced8a65fe6095e62cc605))
+* file line ending to LF ([248a4b7](https://github.com/Aandree5/gui-web-base/commit/248a4b7b6be39dcfe2ecf42945e9ca28ff57c38c))
+* non-root user flow ([#43](https://github.com/Aandree5/gui-web-base/issues/43)) ([06b4377](https://github.com/Aandree5/gui-web-base/commit/06b4377de5ff3938d0e97a021cb3b272a2e23ca9))
+* release please config ([#10](https://github.com/Aandree5/gui-web-base/issues/10)) ([84d89da](https://github.com/Aandree5/gui-web-base/commit/84d89da7563b489dac344d63dd36d097b3df2039))
+* release please config file ([#6](https://github.com/Aandree5/gui-web-base/issues/6)) ([8260c89](https://github.com/Aandree5/gui-web-base/commit/8260c89229e5c40984e05d82d5a1f1f48166357d))
+* release please config package type ([#9](https://github.com/Aandree5/gui-web-base/issues/9)) ([05c5958](https://github.com/Aandree5/gui-web-base/commit/05c5958ae3416d537478bf2df23fbc1c7df10018))
+* release please configs ([#8](https://github.com/Aandree5/gui-web-base/issues/8)) ([4662f4d](https://github.com/Aandree5/gui-web-base/commit/4662f4dadd7b895a9a76b3e40452a676de1f8c19))
+* release please issues ([f465d7b](https://github.com/Aandree5/gui-web-base/commit/f465d7bbce0d584b0945725da6a8af269c8a7cc4))
+* release please tagging ([#12](https://github.com/Aandree5/gui-web-base/issues/12)) ([fe01efa](https://github.com/Aandree5/gui-web-base/commit/fe01efa75faa6926abdff9a6415117b2e66a6d02))
+* release please type ([#1](https://github.com/Aandree5/gui-web-base/issues/1)) ([d3aadf2](https://github.com/Aandree5/gui-web-base/commit/d3aadf21f8a64890d3da231c0062aea0b4b2dc01))
+* removed customisation as it breaches upstream license ([#36](https://github.com/Aandree5/gui-web-base/issues/36)) ([4d650f5](https://github.com/Aandree5/gui-web-base/commit/4d650f5a9ec77a9626cb86336dd2c9b21cfe4b16))
+* url too long ([#15](https://github.com/Aandree5/gui-web-base/issues/15)) ([d8e30f3](https://github.com/Aandree5/gui-web-base/commit/d8e30f3e34380c062da5feb6c79b6ea3043e975a))
+* workflow job version ([c63bc1f](https://github.com/Aandree5/gui-web-base/commit/c63bc1fbd95d940b1523998cb4b4d4116fbd4aec))
+* workflow secret name ([4ca54ae](https://github.com/Aandree5/gui-web-base/commit/4ca54ae5cac59aaba45b9d64ad76f6066269500f))
+
 ## [1.5.2](https://github.com/Aandree5/gui-web-base/compare/v1.5.1...v1.5.2) (2025-10-22)
 
 
