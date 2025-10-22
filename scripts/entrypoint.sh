@@ -24,8 +24,7 @@ PGID=${PGID:-${GWB_GID:-1000}}
 CURRENT_UID=$(id -u gwb || echo -1)
 CURRENT_GID=$(id -g gwb || echo -1)
 
-# Directories to fix permissions for downstream image
-export APP_DIRS=""
+# $APP_DIRS - Directories to fix permissions for downstream image
 # All directories to fix permissions
 PERMISSIONS_DIRS="$GWB_HOME $XDG_RUNTIME_DIR $APP_DIRS"
 
