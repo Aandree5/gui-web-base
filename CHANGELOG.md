@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/Aandree5/gui-web-base/compare/v1.5.1...v1.5.2) (2025-10-22)
+
+
+### Bug Fixes
+
+* `APPS_DIRS` overriding downstream image values ([#57](https://github.com/Aandree5/gui-web-base/issues/57)) ([9d1db93](https://github.com/Aandree5/gui-web-base/commit/9d1db93e95db4cc5c863de350c2f1cbf83b78857))
+
 ## [1.5.1](https://github.com/Aandree5/gui-web-base/compare/v1.5.0...v1.5.1) (2025-10-22)
 
 
