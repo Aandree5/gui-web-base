@@ -105,28 +105,25 @@ fi
 
 export ENABLE_SSL="${ENABLE_SSL:-true}"
 if [ "$ENABLE_SSL" = "true" ]; then
-    SSL_DIR="/pw/ssl"
+    SSL_DIR="/gwb/ssl"
     SSL_CERT_PATH="$SSL_DIR/ssl-cert.pem"
     SSL_CERT_KEY_PATH="$SSL_DIR/key.pem"
     SSL_CERT_CRT_PATH="$SSL_DIR/crt.pem"
-    
-    generate_new_ssl_certificate() {
-        mkdir -p $SSL_DIR
+        
+    if [ ! -f $SSL_CERT_PATH ]; then
+        echo "Generating new self-signed SSL certificate..."
+
+        mkdir -p "$SSL_DIR"
         
         openssl req -new -x509 -days 365 -nodes -out "$SSL_CERT_CRT_PATH" -keyout "$SSL_CERT_KEY_PATH" -sha256  -subj "/CN=localhost" -addext "subjectAltName = DNS:localhost,IP:127.0.0.1"
         cat "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH" > "$SSL_CERT_PATH"
         
         chown "$PUID:$PGID" "$SSL_DIR" "$SSL_CERT_PATH" "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH"
-        chmod 750 "$SSL_CERT_PATH" "$SSL_DIR" "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH"
-    }
-    
-    if [ -f $SSL_CERT_PATH ]; then
-        echo "Generating new self-signed SSL certificate..."
-        generate_new_ssl_certificate
+        chmod 700 "$SSL_DIR" "$SSL_CERT_PATH" "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH"
     else
         echo "Using existing SSL certificate at $SSL_CERT_PATH"
     fi
 fi
 
 echo "Executing as $TARGET_USER"
-exec dumb-init -- gosu "$TARGET_USER" "$@"
+exec dumb-init -- gosu $TARGET_USER "$@"

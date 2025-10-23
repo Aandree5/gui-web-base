@@ -31,7 +31,7 @@ APP_CMD="$1"
 APP_NAME=$(basename "$APP_CMD")
 
 if [ "$ENABLE_SSL" = "true" ]; then
-    SSL_FLAGS="--bind-ssl=0.0.0.0:5005 --ssl-cert=/pw/ssl/ssl-cert.pem"
+    SSL_FLAGS="--bind-ssl=0.0.0.0:5005 --ssl-cert=/gwb/ssl/ssl-cert.pem"
 else
     SSL_FLAGS="--bind-tcp=0.0.0.0:5005"
 fi
