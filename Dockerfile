@@ -89,7 +89,8 @@ EXPOSE 5005
 
 # Simple healthcheck to ensure xpra is running
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD wget --spider --quiet http://localhost:5005/ || exit 1
+    CMD sh -c '[ "$ENABLE_SSL" = "true" ] && wget --spider --no-check-certificate --quiet https://localhost:5005/ || wget --spider --quiet http://localhost:5005/ || exit 1'
+
 
 ENTRYPOINT ["/gwb/entrypoint.sh"]
 CMD ["start-app"]
