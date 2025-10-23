@@ -43,7 +43,7 @@ jobs:
               echo "Container is healthy."
               exit 0
             fi
-            sleep 5
+            sleep 10
           done
           echo "Container did not become healthy in time."
           docker logs gui-web-test
