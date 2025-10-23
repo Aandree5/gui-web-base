@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.4](https://github.com/Aandree5/gui-web-base/compare/v1.5.3...v1.5.4) (2025-10-23)
+
+
+### Bug Fixes
+
+* moved ssl certificate generation logic to runtime ([#61](https://github.com/Aandree5/gui-web-base/issues/61)) ([8c9f58f](https://github.com/Aandree5/gui-web-base/commit/8c9f58f1196131685d9ab5115e843103666e5b24))
+
 ## [1.5.3](https://github.com/Aandree5/gui-web-base/compare/v1.5.2...v1.5.3) (2025-10-22)
 
 
