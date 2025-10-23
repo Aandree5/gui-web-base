@@ -1,4 +1,4 @@
-# GUI web base
+# GUI Web Base
 
 <div align="center">
   <img src="images/logo_256.png" alt="Logo" />
@@ -73,8 +73,6 @@ These can be set using `--build-arg` during `docker build` to define default val
 | `GWB_HOME`  | Default home directory for the runtime user.   | `/home/gwb` | `--build-arg GWB_HOME=/myapp` |
 | `GWB_UMASK` | Default file creation mask applied at runtime. | `077`       | `--build-arg GWB_UMASK=027`   |
 
----
-
 - ### Runtime Environment Variables
 
 These can be overridden by any downstream image or container using `ENV` or `-e` flags.
@@ -86,9 +84,9 @@ These can be overridden by any downstream image or container using `ENV` or `-e`
 | `APP_DIRS`      | Space-separated list of directories to create and assign to the runtime user.             | _(unset)_                    | `ENV APP_DIRS="/myapp/config /var/cache"` or `-e APP_DIRS="..."` |
 | `GWB_HOME`      | Runtime user’s home directory. Overrides the build-time default.                          | `/home/gwb`                  | `ENV GWB_HOME=/myapp` or `-e GWB_HOME=/myapp`                    |
 | `UMASK`         | File creation mask used during startup. Controls default permissions for generated files. | `077`                        | `ENV UMASK=027` or `-e UMASK=027`                                |
-| `SSL_CERT_PATH` | Path to the self-signed SSL certificate. Can be overridden to inject external certs.      | `/etc/xpra/ssl/ssl-cert.pem` | `ENV SSL_CERT_PATH=/etc/ssl/myapp.pem` or `-e SSL_CERT_PATH=...` |
+| `ENABLE_SSL`    | Enables SSL socket binding and triggers certificate generation logic at startup.         | `true`                       | `ENV ENABLE_SSL=false` or `-e ENABLE_SSL=false`                  |
 
----
+> With `ENABLE_SSL=true`, the app is **ONLY** accessible over HTTPS. Disabling it (`ENABLE_SSL=false`) exposes the app via HTTP only.
 
 - ### App Restart Behavior
 

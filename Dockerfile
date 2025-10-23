@@ -21,7 +21,7 @@ FROM debian:bookworm-slim AS debian-build
 LABEL org.opencontainers.image.authors="Aandree5" \
     org.opencontainers.image.license="Apache-2.0" \
     org.opencontainers.image.url="https://github.com/Aandree5/gui-web-base" \
-    org.opencontainers.image.title="GUI web base" \
+    org.opencontainers.image.title="GUI Web Base" \
     org.opencontainers.image.description="Base image for running Linux GUI applications over the web"
 
 ARG GWB_UID=1000
