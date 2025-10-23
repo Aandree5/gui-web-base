@@ -15,18 +15,6 @@
 # Buildkit syntax directive
 # syntax=docker/dockerfile:1.4
 
-
-# Generate self-signed certificate for https
-FROM debian:bookworm-slim AS self-signed-certificate
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    openssl
-
-RUN openssl genrsa -out server.key 2048 \
-    && openssl req -new -key server.key -out server.csr -subj "/CN=localhost" \
-    && openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt \
-    && cat server.key server.crt > server.pem
-
 # ---- Base stage ----
 FROM debian:bookworm-slim AS debian-build
 
@@ -39,9 +27,11 @@ LABEL org.opencontainers.image.authors="Aandree5" \
 ARG GWB_UID=1000
 ARG GWB_GID=1000
 ARG GWB_HOME="/home/gwb"
+ARG GWB_UMASK=077
 ENV GWB_UID=$GWB_UID
 ENV GWB_GID=$GWB_GID
 ENV GWB_HOME=$GWB_HOME
+ENV GWB_UMASK=$GWB_UMASK
 
 # Add xpra repository
 RUN apt-get update \
@@ -67,9 +57,12 @@ RUN apt-get update \
     dbus-x11 \
     pulseaudio \
     xauth \
+    openssl \
     && apt-get autoremove -y --purge \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /etc/apt/sources.list.d/xpra.sources \
+    && rm -rf /usr/share/keyrings/xpra.asc
 
 RUN groupadd -r -g ${GWB_GID} gwb \
     && useradd -u ${GWB_UID} -g ${GWB_GID} -m -d $GWB_HOME -s /bin/bash gwb
@@ -91,9 +84,6 @@ RUN chmod +x /usr/local/bin/watch-app
 
 COPY --chown=${GWB_UID}:${GWB_GID} scripts/entrypoint.sh /gwb/entrypoint.sh
 RUN chmod +x /gwb/entrypoint.sh
-
-# Set certificate from previous stage
-COPY --from=self-signed-certificate server.pem /etc/xpra/ssl/ssl-cert.pem
 
 EXPOSE 5005
 

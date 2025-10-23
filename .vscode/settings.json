@@ -7,14 +7,18 @@
         ]
     },
     "cSpell.words": [
+        "addext",
         "autoremove",
+        "checkend",
         "dbus",
+        "enddate",
         "getent",
         "gosu",
         "guiwebbase",
         "guiwebuser",
         "keyrings",
         "noninteractive",
+        "noout",
         "opengl",
         "pulseaudio",
         "signkey",

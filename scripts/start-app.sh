@@ -38,6 +38,7 @@ xpra seamless :100 \
   --daemon=no \
   --session-name="GUI web app" \
   --socket-dirs=$XDG_RUNTIME_DIR \
+  --ssl-cert=$SSL_CERT_PATH \
   --window-close=ignore \
   --opengl=auto \
   --start="watch-app $RESTART_FLAG -- $APP_CMD"
