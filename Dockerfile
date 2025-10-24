@@ -33,8 +33,6 @@ ENV GWB_GID=$GWB_GID
 ENV GWB_HOME=$GWB_HOME
 ENV GWB_UMASK=$GWB_UMASK
 
-ENV ENABLE_SSL=true
-
 # Add xpra repository
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -60,6 +58,7 @@ RUN apt-get update \
     pulseaudio \
     xauth \
     openssl \
+    nginx \
     && apt-get autoremove -y --purge \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
@@ -84,7 +83,11 @@ RUN chmod +x /usr/local/bin/start-app
 COPY --chown=${GWB_UID}:${GWB_GID} scripts/watch-app.sh /usr/local/bin/watch-app
 RUN chmod +x /usr/local/bin/watch-app
 
-EXPOSE 5005
+
+COPY --chown=${GWB_UID}:${GWB_GID} config/nginx.conf /gwb/nginx.conf
+
+EXPOSE 80
+EXPOSE 443
 
 COPY scripts/entrypoint.sh /gwb/entrypoint.sh
 RUN chmod +x /gwb/entrypoint.sh

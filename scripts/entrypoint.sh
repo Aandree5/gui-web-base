@@ -31,7 +31,7 @@ CURRENT_GID=$(id -g gwb || echo -1)
 
 # $APP_DIRS - Directories to fix permissions for downstream image
 # All directories to fix permissions
-PERMISSIONS_DIRS="$GWB_HOME $XDG_RUNTIME_DIR ${APP_DIRS:-}"
+PERMISSIONS_DIRS="$GWB_HOME $XDG_RUNTIME_DIR /var/lib/nginx /gwb/nginx ${APP_DIRS:-}"
 
 echo "Current UID:GID = ${CURRENT_UID:-<missing>}:${CURRENT_GID:-<missing>}"
 echo "Target UID:GID = $PUID:$PGID"
@@ -103,26 +103,24 @@ else
     fix_dirs_permissions
 fi
 
-# Generate self-signed SSL certificate if ENABLE_SSL is true
-if [ "$ENABLE_SSL" = "true" ]; then
-    SSL_DIR="/gwb/ssl"
-    SSL_CERT_PATH="$SSL_DIR/ssl-cert.pem"
-    SSL_CERT_KEY_PATH="$SSL_DIR/key.pem"
-    SSL_CERT_CRT_PATH="$SSL_DIR/crt.pem"
-        
-    if [ ! -f $SSL_CERT_PATH ]; then
-        echo "Generating new self-signed SSL certificate..."
+# Generate self-signed SSL certificate if not present
+SSL_DIR="/gwb/ssl"
+SSL_CERT_PATH="$SSL_DIR/ssl-cert.pem"
+SSL_CERT_KEY_PATH="$SSL_DIR/key.pem"
+SSL_CERT_CRT_PATH="$SSL_DIR/crt.pem"
+    
+if [ ! -f $SSL_CERT_PATH ]; then
+    echo "Generating new self-signed SSL certificate..."
 
-        mkdir -p "$SSL_DIR"
-        
-        openssl req -new -x509 -days 365 -nodes -out "$SSL_CERT_CRT_PATH" -keyout "$SSL_CERT_KEY_PATH" -sha256  -subj "/CN=localhost" -addext "subjectAltName = DNS:localhost,IP:127.0.0.1"
-        cat "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH" > "$SSL_CERT_PATH"
-        
-        chown "$PUID:$PGID" "$SSL_DIR" "$SSL_CERT_PATH" "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH"
-        chmod 700 "$SSL_DIR" "$SSL_CERT_PATH" "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH"
-    else
-        echo "Using existing SSL certificate at $SSL_CERT_PATH"
-    fi
+    mkdir -p "$SSL_DIR"
+    
+    openssl req -new -x509 -days 365 -nodes -out "$SSL_CERT_CRT_PATH" -keyout "$SSL_CERT_KEY_PATH" -sha256  -subj "/CN=localhost" -addext "subjectAltName = DNS:localhost,IP:127.0.0.1"
+    cat "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH" > "$SSL_CERT_PATH"
+    
+    chown "$PUID:$PGID" "$SSL_DIR" "$SSL_CERT_PATH" "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH"
+    chmod 700 "$SSL_DIR" "$SSL_CERT_PATH" "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH"
+else
+    echo "Using existing SSL certificate at $SSL_CERT_PATH"
 fi
 
 echo "Executing as $TARGET_USER"
