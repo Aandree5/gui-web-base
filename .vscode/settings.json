@@ -16,6 +16,7 @@
         "gosu",
         "guiwebbase",
         "guiwebuser",
+        "keyout",
         "keyrings",
         "noninteractive",
         "noout",

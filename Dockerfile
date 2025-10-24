@@ -21,7 +21,7 @@ FROM debian:bookworm-slim AS debian-build
 LABEL org.opencontainers.image.authors="Aandree5" \
     org.opencontainers.image.license="Apache-2.0" \
     org.opencontainers.image.url="https://github.com/Aandree5/gui-web-base" \
-    org.opencontainers.image.title="GUI web base" \
+    org.opencontainers.image.title="GUI Web Base" \
     org.opencontainers.image.description="Base image for running Linux GUI applications over the web"
 
 ARG GWB_UID=1000
@@ -32,6 +32,8 @@ ENV GWB_UID=$GWB_UID
 ENV GWB_GID=$GWB_GID
 ENV GWB_HOME=$GWB_HOME
 ENV GWB_UMASK=$GWB_UMASK
+
+ENV ENABLE_SSL=true
 
 # Add xpra repository
 RUN apt-get update \
@@ -82,14 +84,17 @@ RUN chmod +x /usr/local/bin/start-app
 COPY --chown=${GWB_UID}:${GWB_GID} scripts/watch-app.sh /usr/local/bin/watch-app
 RUN chmod +x /usr/local/bin/watch-app
 
-COPY --chown=${GWB_UID}:${GWB_GID} scripts/entrypoint.sh /gwb/entrypoint.sh
-RUN chmod +x /gwb/entrypoint.sh
-
 EXPOSE 5005
 
+COPY scripts/entrypoint.sh /gwb/entrypoint.sh
+RUN chmod +x /gwb/entrypoint.sh
+
 # Simple healthcheck to ensure xpra is running
+COPY scripts/healthcheck.sh /gwb/healthcheck.sh
+RUN chmod +x /gwb/healthcheck.sh
+
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD wget --spider --quiet http://localhost:5005/ || exit 1
+  CMD /gwb/healthcheck.sh
 
 ENTRYPOINT ["/gwb/entrypoint.sh"]
 CMD ["start-app"]

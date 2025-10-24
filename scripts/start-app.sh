@@ -30,15 +30,21 @@ fi
 APP_CMD="$1"
 APP_NAME=$(basename "$APP_CMD")
 
+if [ "$ENABLE_SSL" = "true" ]; then
+    SSL_FLAGS="--bind-ssl=0.0.0.0:5005 --ssl-cert=/gwb/ssl/ssl-cert.pem"
+else
+    SSL_FLAGS="--bind-tcp=0.0.0.0:5005"
+fi
+
 # (opengl=auto) - Disable OpenGL when not supported, like for alpine build for a smaller image (for OpenGL support use debian build)
 xpra seamless :100 \
-  --bind-tcp=0.0.0.0:5005 \
-  --html=on \
-  --exit-with-children=no \
-  --daemon=no \
-  --session-name="GUI web app" \
-  --socket-dirs=$XDG_RUNTIME_DIR \
-  --ssl-cert=$SSL_CERT_PATH \
-  --window-close=ignore \
-  --opengl=auto \
-  --start="watch-app $RESTART_FLAG -- $APP_CMD"
+    $SSL_FLAGS \
+    --auth=none \
+    --html=on \
+    --exit-with-children=no \
+    --daemon=no \
+    --session-name="GUI web app" \
+    --socket-dirs=$XDG_RUNTIME_DIR \
+    --window-close=ignore \
+    --opengl=auto \
+    --start="watch-app $RESTART_FLAG -- $APP_CMD"
