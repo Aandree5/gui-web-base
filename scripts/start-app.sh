@@ -30,16 +30,12 @@ fi
 APP_CMD="$1"
 APP_NAME=$(basename "$APP_CMD")
 
-if [ "$ENABLE_SSL" = "true" ]; then
-    SSL_FLAGS="--bind-ssl=0.0.0.0:5005 --ssl-cert=/gwb/ssl/ssl-cert.pem"
-else
-    SSL_FLAGS="--bind-tcp=0.0.0.0:5005"
-fi
+nginx -c /gwb/nginx.conf -g 'pid /gwb/nginx/nginx.pid;'
 
 # (opengl=auto) - Disable OpenGL when not supported, like for alpine build for a smaller image (for OpenGL support use debian build)
 xpra seamless :100 \
-    $SSL_FLAGS \
-    --auth=none \
+    --bind-tcp=127.0.0.1:5005 \
+    --ssl-cert=/gwb/ssl/ssl-cert.pem \
     --html=on \
     --exit-with-children=no \
     --daemon=no \

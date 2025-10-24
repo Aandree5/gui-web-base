@@ -13,11 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-if [ "$ENABLE_SSL" = "true" ]; then
-    URL="https://localhost:5005/"
-else
-    URL="http://localhost:5005/"
-fi
-
-wget --spider --no-check-certificate --quiet "$URL" || exit 1
+wget --spider --no-check-certificate --quiet "https://localhost:5005" || exit 1

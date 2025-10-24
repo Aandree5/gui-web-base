@@ -84,9 +84,6 @@ These can be overridden by any downstream image or container using `ENV` or `-e`
 | `APP_DIRS`      | Space-separated list of directories to create and assign to the runtime user.             | _(unset)_                    | `ENV APP_DIRS="/myapp/config /var/cache"` or `-e APP_DIRS="..."` |
 | `GWB_HOME`      | Runtime user’s home directory. Overrides the build-time default.                          | `/home/gwb`                  | `ENV GWB_HOME=/myapp` or `-e GWB_HOME=/myapp`                    |
 | `UMASK`         | File creation mask used during startup. Controls default permissions for generated files. | `077`                        | `ENV UMASK=027` or `-e UMASK=027`                                |
-| `ENABLE_SSL`    | Enables SSL socket binding and triggers certificate generation logic at startup.         | `true`                       | `ENV ENABLE_SSL=false` or `-e ENABLE_SSL=false`                  |
-
-> With `ENABLE_SSL=true`, the app is **ONLY** accessible over HTTPS. Disabling it (`ENABLE_SSL=false`) exposes the app via HTTP only.
 
 - ### App Restart Behavior
 
