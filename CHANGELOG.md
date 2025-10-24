@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.5](https://github.com/Aandree5/gui-web-base/compare/v1.5.4...v1.5.5) (2025-10-24)
+
+
+### Bug Fixes
+
+* removed `SSL_CET_PATH` in favour of `ENABLE_SSL` workflow ([#64](https://github.com/Aandree5/gui-web-base/issues/64)) ([3092d4b](https://github.com/Aandree5/gui-web-base/commit/3092d4b0f6fbb4e71eeb756c1145ea5325f0ff9e))
+
 ## [1.5.4](https://github.com/Aandree5/gui-web-base/compare/v1.5.3...v1.5.4) (2025-10-23)
 
 
