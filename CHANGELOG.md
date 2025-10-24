@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.6](https://github.com/Aandree5/gui-web-base/compare/v1.5.5...v1.5.6) (2025-10-24)
+
+
+### Bug Fixes
+
+* moved to nginx to fix SSL auth prompt ([c2e655a](https://github.com/Aandree5/gui-web-base/commit/c2e655a9d2eed8ddb432728c519806cdae3c9198))
+* moved to nginx to fix SSL auth prompt ([#67](https://github.com/Aandree5/gui-web-base/issues/67)) ([c2e655a](https://github.com/Aandree5/gui-web-base/commit/c2e655a9d2eed8ddb432728c519806cdae3c9198))
+
 ## [1.5.5](https://github.com/Aandree5/gui-web-base/compare/v1.5.4...v1.5.5) (2025-10-24)
 
 
