@@ -33,6 +33,8 @@ ENV GWB_GID=$GWB_GID
 ENV GWB_HOME=$GWB_HOME
 ENV GWB_UMASK=$GWB_UMASK
 
+ENV ENABLE_SSL=true
+
 # Add xpra repository
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -82,15 +84,17 @@ RUN chmod +x /usr/local/bin/start-app
 COPY --chown=${GWB_UID}:${GWB_GID} scripts/watch-app.sh /usr/local/bin/watch-app
 RUN chmod +x /usr/local/bin/watch-app
 
-COPY --chown=${GWB_UID}:${GWB_GID} scripts/entrypoint.sh /gwb/entrypoint.sh
-RUN chmod +x /gwb/entrypoint.sh
-
 EXPOSE 5005
 
-# Simple healthcheck to ensure xpra is running
-HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-  CMD sh -c 'URL="http://localhost:5005/"; [ "$ENABLE_SSL" = "true" ] && URL="https://localhost:5005/"; wget --spider --no-check-certificate --quiet "$URL" || exit 1'
+COPY scripts/entrypoint.sh /gwb/entrypoint.sh
+RUN chmod +x /gwb/entrypoint.sh
 
+# Simple healthcheck to ensure xpra is running
+COPY scripts/healthcheck.sh /gwb/healthcheck.sh
+RUN chmod +x /gwb/healthcheck.sh
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+  CMD /gwb/healthcheck.sh
 
 ENTRYPOINT ["/gwb/entrypoint.sh"]
 CMD ["start-app"]

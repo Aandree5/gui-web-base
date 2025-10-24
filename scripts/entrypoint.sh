@@ -103,7 +103,7 @@ else
     fix_dirs_permissions
 fi
 
-export ENABLE_SSL="${ENABLE_SSL:-true}"
+# Generate self-signed SSL certificate if ENABLE_SSL is true
 if [ "$ENABLE_SSL" = "true" ]; then
     SSL_DIR="/gwb/ssl"
     SSL_CERT_PATH="$SSL_DIR/ssl-cert.pem"
