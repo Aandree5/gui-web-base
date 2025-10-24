@@ -89,7 +89,7 @@ EXPOSE 5005
 COPY scripts/entrypoint.sh /gwb/entrypoint.sh
 RUN chmod +x /gwb/entrypoint.sh
 
-# Simple healthcheck to ensure xpra is running
+# Container healthcheck
 COPY scripts/healthcheck.sh /gwb/healthcheck.sh
 RUN chmod +x /gwb/healthcheck.sh
 
