@@ -16,7 +16,7 @@
 # syntax=docker/dockerfile:1.4
 
 # ---- Base stage ----
-FROM debian:bookworm-slim AS debian-build
+FROM debian:trixie-slim AS debian-build
 
 LABEL org.opencontainers.image.authors="Aandree5" \
     org.opencontainers.image.license="Apache-2.0" \
@@ -97,7 +97,7 @@ COPY scripts/healthcheck.sh /gwb/healthcheck.sh
 RUN chmod +x /gwb/healthcheck.sh
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-  CMD /gwb/healthcheck.sh
+    CMD /gwb/healthcheck.sh
 
 ENTRYPOINT ["/gwb/entrypoint.sh"]
 CMD ["start-app"]

@@ -139,7 +139,7 @@ Contributions are welcome! Please follow these steps to get set up:
 
 ## 📦 Tech Stack Overview
 
-- **Debian `bookworm-slim`**  
+- **Debian `trixie-slim`**  
   Stable Linux base, optimized for performance and size.
 
 - **[Xpra](https://github.com/Xpra-org/xpra/)**  
