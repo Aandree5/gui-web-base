@@ -39,7 +39,7 @@ RUN apt-get update \
     wget \
     ca-certificates \
     && wget -O "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc \
-    && cd /etc/apt/sources.list.d ; wget "https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/bookworm/xpra.sources"
+    && cd /etc/apt/sources.list.d ; wget "https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/trixie/xpra.sources"
 
 # xpra packages: https://github.com/Xpra-org/xpra/blob/master/docs/Build/Packaging.md
 RUN apt-get update \
