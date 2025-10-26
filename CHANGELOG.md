@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/Aandree5/gui-web-base/compare/v1.5.6...v1.6.0) (2025-10-26)
+
+
+### Features
+
+* updated debian to `trixie` ([#69](https://github.com/Aandree5/gui-web-base/issues/69)) ([b5c9461](https://github.com/Aandree5/gui-web-base/commit/b5c9461641b117bbfe3ceea18f30f510a2029483))
+
 ## [1.5.6](https://github.com/Aandree5/gui-web-base/compare/v1.5.5...v1.5.6) (2025-10-24)
 
 
