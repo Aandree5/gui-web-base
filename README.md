@@ -20,6 +20,7 @@ A Docker base image to simplify the creation of downstream containers that run L
 - **Integrated clipboard** - Seamless copy-paste between app and browser.
 - **Audio forwarding** - Stream audio from the app to your browser seamlessly.
 - **Automatic restart** - Apps relaunch automatically when closed.
+- **HTTPS redirect** – Enforces secure connections over HTTPS, by default.
 
 ## 🚀 Quick Start
 
@@ -77,13 +78,16 @@ These can be set using `--build-arg` during `docker build` to define default val
 
 These can be overridden by any downstream image or container using `ENV` or `-e` flags.
 
-| Variable        | Description                                                                               | Default                      | Example                                                          |
-| --------------- | ----------------------------------------------------------------------------------------- | ---------------------------- | ---------------------------------------------------------------- |
-| `PUID`          | Runtime user ID. Used to remap file ownership and process permissions.                    | `1000`                       | `ENV PUID=1000` or `-e PUID=1000`                                |
-| `PGID`          | Runtime group ID. Used to remap file ownership and process permissions.                   | `1000`                       | `ENV PGID=1000` or `-e PGID=1000`                                |
-| `APP_DIRS`      | Space-separated list of directories to create and assign to the runtime user.             | _(unset)_                    | `ENV APP_DIRS="/myapp/config /var/cache"` or `-e APP_DIRS="..."` |
-| `GWB_HOME`      | Runtime user’s home directory. Overrides the build-time default.                          | `/home/gwb`                  | `ENV GWB_HOME=/myapp` or `-e GWB_HOME=/myapp`                    |
-| `UMASK`         | File creation mask used during startup. Controls default permissions for generated files. | `077`                        | `ENV UMASK=027` or `-e UMASK=027`                                |
+| Variable     | Description                                                                               | Default     | Example                                                          |
+| ------------ | ----------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------- |
+| `PUID`       | Runtime user ID. Used to remap file ownership and process permissions.                    | `1000`      | `ENV PUID=1000` or `-e PUID=1000`                                |
+| `PGID`       | Runtime group ID. Used to remap file ownership and process permissions.                   | `1000`      | `ENV PGID=1000` or `-e PGID=1000`                                |
+| `APP_DIRS`   | Space-separated list of directories to create and assign to the runtime user.             | _(unset)_   | `ENV APP_DIRS="/myapp/config /var/cache"` or `-e APP_DIRS="..."` |
+| `GWB_HOME`   | Runtime user’s home directory. Overrides the build-time default.                          | `/home/gwb` | `ENV GWB_HOME=/myapp` or `-e GWB_HOME=/myapp`                    |
+| `UMASK`      | File creation mask used during startup. Controls default permissions for generated files. | `077`       | `ENV UMASK=027` or `-e UMASK=027`                                |
+| `ALLOW_HTTP` | Enables or disables automatic HTTP-to-HTTPS redirection.                                  | `false`     | `ENV ALLOW_HTTP=true` or `-e FORCE_HTTPS_REDIRECT=true`          |
+
+> `ALLOW_HTTP` is recomended set to `false` to keep all traffic secure, even with self-signed certificates. In some cases it can be usefull to allow HTTP access, shuch as if the app is going to be behind a reverse proxy, which is handling SSL certificates.
 
 - ### App Restart Behavior
 
