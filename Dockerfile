@@ -83,8 +83,7 @@ RUN chmod +x /usr/local/bin/start-app
 COPY --chown=${GWB_UID}:${GWB_GID} scripts/watch-app.sh /usr/local/bin/watch-app
 RUN chmod +x /usr/local/bin/watch-app
 
-
-COPY --chown=${GWB_UID}:${GWB_GID} config/nginx.conf /gwb/nginx.conf
+COPY --chown=${GWB_UID}:${GWB_GID} config/nginx/ /gwb/nginx/
 
 EXPOSE 80
 EXPOSE 443

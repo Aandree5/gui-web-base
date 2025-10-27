@@ -30,7 +30,14 @@ fi
 APP_CMD="$1"
 APP_NAME=$(basename "$APP_CMD")
 
-nginx -c /gwb/nginx.conf -g 'pid /gwb/nginx/nginx.pid;'
+ALLOW_HTTP=${ALLOW_HTTP:-true}
+if [ $ALLOW_HTTP = true ]; then
+    NGINX_CONFIG="/gwb/nginx/nginx.noredirect.conf"
+else
+    NGINX_CONFIG="/gwb/nginx/nginx.conf"
+fi
+
+nginx -c "$NGINX_CONFIG" -g 'pid /gwb/nginx/nginx.pid;'
 
 # (opengl=auto) - Disable OpenGL when not supported, like for alpine build for a smaller image (for OpenGL support use debian build)
 xpra seamless :100 \
