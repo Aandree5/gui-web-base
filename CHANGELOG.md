@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/Aandree5/gui-web-base/compare/v1.6.0...v1.7.0) (2025-10-27)
+
+
+### Features
+
+* added `ALLOW_HTTP` environment variable to allow `HTTP` access ([#73](https://github.com/Aandree5/gui-web-base/issues/73)) ([0f03fbf](https://github.com/Aandree5/gui-web-base/commit/0f03fbff4d7af9d783555f147688c2a3e90a54df))
+
 ## [1.6.0](https://github.com/Aandree5/gui-web-base/compare/v1.5.6...v1.6.0) (2025-10-26)
 
 
