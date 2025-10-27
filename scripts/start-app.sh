@@ -14,31 +14,59 @@
 # limitations under the License.
 
 RESTART_FLAG=""
+BROWSER_TITLE="GUI Web App"
 
-if [ "$1" = "--no-restart" ]; then
-    RESTART_FLAG="--no-restart"
-    shift
-fi
+# Parse optional flags
+while [ "$1" ]; do
+    case "$1" in
+        --no-restart)
+            RESTART_FLAG="--no-restart"
+            shift
+            ;;
+        --title)
+            shift
+            if [ -z "$1" ]; then
+                echo "[ERROR] --title requires a value."
+                echo "Usage: $0 [--no-restart] [--title <browser_title>] <app_command> [args...]"
+                exit 1
+            fi
+            BROWSER_TITLE="$1"
+            shift
+            ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            exit 2
+        ;;
+        *)
+            break
+            ;;
+    esac
+done
 
 # Require an app command as the first argument
 if [ -z "$1" ]; then
     echo "[ERROR] No application command provided."
-    echo "Usage: $0 [--no-restart] <app_command> [args...]"
+    echo "Usage: $0 [--no-restart] [--title <browser_title>] <app_command> [args...]"
     exit 1
 fi
 
-APP_CMD="$1"
+APP_CMD="$@"
 APP_NAME=$(basename "$APP_CMD")
 
 ALLOW_HTTP=${ALLOW_HTTP:-true}
 if [ $ALLOW_HTTP = true ]; then
+    echo "[INFO] HTTP connections are allowed."
     NGINX_CONFIG="/gwb/nginx/nginx.noredirect.conf"
 else
+    echo "[INFO] HTTP connections will be redirected to HTTPS."
     NGINX_CONFIG="/gwb/nginx/nginx.conf"
 fi
 
+# Start NGINX
+echo "[INFO] Starting NGINX"
 nginx -c "$NGINX_CONFIG" -g 'pid /gwb/nginx/nginx.pid;'
 
+echo "[INFO] Starting application: $APP_NAME"
 # (opengl=auto) - Disable OpenGL when not supported, like for alpine build for a smaller image (for OpenGL support use debian build)
 xpra seamless :100 \
     --bind-tcp=127.0.0.1:5005 \
@@ -46,8 +74,8 @@ xpra seamless :100 \
     --html=on \
     --exit-with-children=no \
     --daemon=no \
-    --session-name="GUI web app" \
+    --session-name="$BROWSER_TITLE" \
     --socket-dirs=$XDG_RUNTIME_DIR \
     --window-close=ignore \
     --opengl=auto \
-    --start="watch-app $RESTART_FLAG -- $APP_CMD"
+    --start="watch-app $RESTART_FLAG -- \"$APP_CMD\""
