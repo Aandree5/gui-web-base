@@ -22,7 +22,7 @@ A Docker base image to simplify the creation of downstream containers that run L
 - **Automatic restart** - Apps relaunch automatically when closed.
 - **HTTPS redirect** – Enforces secure connections over HTTPS, by default.
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 
 This image is designed to be used as a **base** for `Dockerfiles`.  
 Install a desired GUI app and call the following to launch it.
@@ -143,7 +143,7 @@ Contributions are welcome! Please follow these steps to get set up:
 
 ## 📦 Tech Stack Overview
 
-- **Debian `bookworm-slim`**  
+- **Debian `trixie-slim`**  
   Stable Linux base, optimized for performance and size.
 
 - **[Xpra](https://github.com/Xpra-org/xpra/)**  
