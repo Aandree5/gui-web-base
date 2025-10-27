@@ -89,14 +89,16 @@ These can be overridden by any downstream image or container using `ENV` or `-e`
 
 > `ALLOW_HTTP` is recomended set to `false` to keep all traffic secure, even with self-signed certificates. In some cases it can be usefull to allow HTTP access, shuch as if the app is going to be behind a reverse proxy, which is handling SSL certificates.
 
-- ### App Restart Behavior
+- ### App Launch Flags
 
-Closing the app window triggers an automatic restart by default. Pass `--no-restart` to `CMD` disable this feature.
+These options can be passed to `CMD` in your Dockerfile to customize app behavior.
 
-```dockerfile
-CMD ["start-app", "--no-restart", "<app>"]
+| Option         | Description                                                 | Default        | Example                                                |
+| -------------- | ----------------------------------------------------------- | -------------- | ------------------------------------------------------ |
+| `--no-restart` | Prevents the app from restarting when its window is closed. | _(enabled)_    | `CMD ["start-app", "--no-restart", "my-app"]`          |
+| `--title`      | Sets the browser tab title for the web interface.           | `GUI Web Base` | `CMD ["start-app", "--title", "My Web App", "my-app"]` |
 
-```
+> By default, the app will restart automatically when closed. Use `--no-restart` to disable this behavior.
 
 ## 🏷️ Versioning & Tags
 
