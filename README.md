@@ -56,10 +56,10 @@ CMD ["start-app", "xterm"]
 docker build -t gui-web-xterm .
 
 # Run it
-docker run -d -p 5005:5005 gui-web-xterm
+docker run -d -p 443:5443 gui-web-xterm
 ```
 
-> _To access the app open `http://localhost:5005` in the browser._
+> _To access the app open `https://localhost` in the browser._
 
 ## ⚙️ Configuration
 
