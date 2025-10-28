@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.8.0](https://github.com/Aandree5/gui-web-base/compare/v1.7.0...v1.8.0) (2025-10-28)
+
+
+### Features
+
+* added `BROWSER_TITLE` flag ([#75](https://github.com/Aandree5/gui-web-base/issues/75)) ([d71d7ac](https://github.com/Aandree5/gui-web-base/commit/d71d7ac33f2c69b7fb75901f17ea47775a970489))
+
+
+### Bug Fixes
+
+* some warnings at runtime ([#78](https://github.com/Aandree5/gui-web-base/issues/78)) ([95779c3](https://github.com/Aandree5/gui-web-base/commit/95779c3b8396f782dff5bf891e9a117633873145))
+
 ## [1.7.0](https://github.com/Aandree5/gui-web-base/compare/v1.6.0...v1.7.0) (2025-10-27)
 
 
