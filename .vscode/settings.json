@@ -16,6 +16,7 @@
         "gosu",
         "guiwebbase",
         "guiwebuser",
+        "healthcheck",
         "keyout",
         "keyrings",
         "noninteractive",

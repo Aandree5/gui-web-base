@@ -32,7 +32,7 @@ jobs:
         run: docker build --target ci-healthcheck -t gui-web-base:ci-healthcheck .
 
       - name: Run container
-        run: docker run -d --name gui-web-test -p 5005:5005 gui-web-base:ci-healthcheck
+        run: docker run -d --name gui-web-test gui-web-base:ci-healthcheck
 
       - name: Wait for healthcheck to pass
         run: |
