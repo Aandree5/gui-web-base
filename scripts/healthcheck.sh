@@ -13,4 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-wget --spider --no-check-certificate --quiet "https://localhost:5005" || exit 1
+wget --spider --no-check-certificate --quiet "https://localhost:5443" || exit 1
