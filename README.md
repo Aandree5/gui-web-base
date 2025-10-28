@@ -69,10 +69,10 @@ These can be set using `--build-arg` during `docker build` to define default val
 
 | Argument    | Description                                    | Default     | Example                       |
 | ----------- | ---------------------------------------------- | ----------- | ----------------------------- |
-| `GWB_UID`   | Default UID for the runtime user.              | `1000`      | `--build-arg GWB_UID=1000`    |
-| `GWB_GID`   | Default GID for the runtime group.             | `1000`      | `--build-arg GWB_GID=1000`    |
+| `PUID`   | Default UID for the build/runtime user.              | `1000`      | `--build-arg PUID=1000`    |
+| `PGID`   | Default GID for the build/runtime group.             | `1000`      | `--build-arg PGID=1000`    |
 | `GWB_HOME`  | Default home directory for the runtime user.   | `/home/gwb` | `--build-arg GWB_HOME=/myapp` |
-| `GWB_UMASK` | Default file creation mask applied at runtime. | `077`       | `--build-arg GWB_UMASK=027`   |
+| `UMASK` | Default file creation mask applied at runtime. | `077`       | `--build-arg UMASK=027`   |
 
 - ### Runtime Environment Variables
 

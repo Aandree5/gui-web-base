@@ -17,13 +17,13 @@
 set -eu
 
 # Default umask
-UMASK="${UMASK:-${GWB_UMASK:-077}}"
-umask "$UMASK"
+UMASK=${UMASK:-077}
+umask $UMASK
 echo "Using umask: $UMASK"
 
 # Target PUID and PGID
-PUID=${PUID:-${GWB_UID:-1000}}
-PGID=${PGID:-${GWB_GID:-1000}}
+PUID=${PUID:-1000}
+PGID=${PGID:-1000}
 
 # Current gwb UID and GID
 CURRENT_UID=$(id -u gwb || echo -1)
