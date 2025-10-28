@@ -58,6 +58,7 @@ RUN apt-get update \
     xpra-audio \
     dbus \
     dbus-x11 \
+    python3-dbus \
     pulseaudio \
     xauth \
     openssl \
@@ -80,6 +81,13 @@ RUN mkdir -m 755 -p /var/lib/dbus \
 
 ENV XDG_RUNTIME_DIR="/gwb/xpra"
 
+# fix: _XSERVTransmkdir: Owner of /tmp/.X11-unix should be set to root
+# fix: _XSERVTransmkdir: Mode of /tmp/.X11-unix should be set to 1777
+RUN mkdir -p /tmp/.X11-unix \
+    && chown -R root:root /tmp/.X11-unix \
+    && chmod 1777 /tmp/.X11-unix
+
+# Copy scripts and configuration files
 COPY --chown=${GWB_UID}:${GWB_GID} scripts/start-app.sh /usr/local/bin/start-app
 RUN chmod +x /usr/local/bin/start-app
 
