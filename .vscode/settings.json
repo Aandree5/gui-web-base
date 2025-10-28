@@ -19,6 +19,7 @@
         "healthcheck",
         "keyout",
         "keyrings",
+        "mdns",
         "noninteractive",
         "noout",
         "noredirect",

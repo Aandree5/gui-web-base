@@ -78,4 +78,11 @@ xpra seamless :100 \
     --socket-dirs=$XDG_RUNTIME_DIR \
     --window-close=ignore \
     --opengl=auto \
+    --ssh=no \
+    --mdns=no \
+    --pulseaudio=yes \
+    --clipboard=yes \
+    --clipboard-direction=both \
+    --file-transfer=yes \
+    --webcam=no \
     --start="watch-app $RESTART_FLAG -- \"$APP_CMD\""
