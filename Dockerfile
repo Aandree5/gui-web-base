@@ -24,14 +24,15 @@ LABEL org.opencontainers.image.authors="Aandree5" \
     org.opencontainers.image.title="GUI Web Base" \
     org.opencontainers.image.description="Base image for running Linux GUI applications over the web"
 
-ARG GWB_UID=1000
-ARG GWB_GID=1000
+ARG PUID=1000
+ARG PGID=1000
+ARG UMASK=077
 ARG GWB_HOME="/home/gwb"
-ARG GWB_UMASK=077
-ENV PUID=$GWB_UID
-ENV PGID=$GWB_GID
+
+ENV PUID=$PUID
+ENV PGID=$PGID
+ENV UMASK=$UMASK
 ENV GWB_HOME=$GWB_HOME
-ENV UMASK=$GWB_UMASK
 
 EXPOSE 5000
 EXPOSE 5443
@@ -69,13 +70,13 @@ RUN apt-get update \
     && rm -rf /etc/apt/sources.list.d/xpra.sources \
     && rm -rf /usr/share/keyrings/xpra.asc
 
-RUN groupadd -r -g $GWB_GID gwb \
-    && useradd -u $GWB_UID -g $GWB_GID -m -d $GWB_HOME -s /bin/bash gwb
+RUN groupadd -r -g $PGID gwb \
+    && useradd -u $PUID -g $PGID -m -d $GWB_HOME -s /bin/bash gwb
 
 # Socket directory with the correct permissions, owned by gwb.
 RUN mkdir -m 755 -p /var/lib/dbus \
     && mkdir -p /gwb/xpra \
-    && chown $GWB_UID:$GWB_GID /gwb/xpra \
+    && chown $PUID:$PGID /gwb/xpra \
     && chmod 700 /gwb/xpra \
     && dbus-uuidgen > /var/lib/dbus/machine-id
 
@@ -88,13 +89,13 @@ RUN mkdir -p /tmp/.X11-unix \
     && chmod 1777 /tmp/.X11-unix
 
 # Copy scripts and configuration files
-COPY --chown=$GWB_UID:$GWB_GID scripts/start-app.sh /usr/local/bin/start-app
+COPY --chown=$PUID:$PGID scripts/start-app.sh /usr/local/bin/start-app
 RUN chmod +x /usr/local/bin/start-app
 
-COPY --chown=$GWB_UID:$GWB_GID scripts/watch-app.sh /usr/local/bin/watch-app
+COPY --chown=$PUID:$PGID scripts/watch-app.sh /usr/local/bin/watch-app
 RUN chmod +x /usr/local/bin/watch-app
 
-COPY --chown=$GWB_UID:$GWB_GID config/nginx/ /gwb/nginx/
+COPY --chown=$PUID:$PGID config/nginx/ /gwb/nginx/
 
 COPY scripts/entrypoint.sh /gwb/entrypoint.sh
 RUN chmod +x /gwb/entrypoint.sh
