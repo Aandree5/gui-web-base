@@ -33,6 +33,9 @@ ENV GWB_GID=$GWB_GID
 ENV GWB_HOME=$GWB_HOME
 ENV GWB_UMASK=$GWB_UMASK
 
+EXPOSE 5000
+EXPOSE 5443
+
 # Add xpra repository
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -84,9 +87,6 @@ COPY --chown=${GWB_UID}:${GWB_GID} scripts/watch-app.sh /usr/local/bin/watch-app
 RUN chmod +x /usr/local/bin/watch-app
 
 COPY --chown=${GWB_UID}:${GWB_GID} config/nginx/ /gwb/nginx/
-
-EXPOSE 80
-EXPOSE 443
 
 COPY scripts/entrypoint.sh /gwb/entrypoint.sh
 RUN chmod +x /gwb/entrypoint.sh

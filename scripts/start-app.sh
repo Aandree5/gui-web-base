@@ -69,7 +69,7 @@ nginx -c "$NGINX_CONFIG" -g 'pid /gwb/nginx/nginx.pid;'
 echo "[INFO] Starting application: $APP_NAME"
 # (opengl=auto) - Disable OpenGL when not supported, like for alpine build for a smaller image (for OpenGL support use debian build)
 xpra seamless :100 \
-    --bind-tcp=127.0.0.1:5005 \
+    --bind-tcp=127.0.0.1:3000 \
     --ssl-cert=/gwb/ssl/ssl-cert.pem \
     --html=on \
     --exit-with-children=no \
