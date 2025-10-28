@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/Aandree5/gui-web-base/compare/v1.8.0...v1.8.1) (2025-10-28)
+
+
+### Bug Fixes
+
+* cleaned env vars ([#79](https://github.com/Aandree5/gui-web-base/issues/79)) ([cdf7e6c](https://github.com/Aandree5/gui-web-base/commit/cdf7e6ce41ee3af042ab68588ec9d306390c78a2))
+
 ## [1.8.0](https://github.com/Aandree5/gui-web-base/compare/v1.7.0...v1.8.0) (2025-10-28)
 
 
