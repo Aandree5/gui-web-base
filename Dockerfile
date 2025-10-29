@@ -46,6 +46,7 @@ RUN apt-get update \
     && cd /etc/apt/sources.list.d ; wget "https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/trixie/xpra.sources"
 
 # xpra packages: https://github.com/Xpra-org/xpra/blob/master/docs/Build/Packaging.md
+# fixed xpra-html5 to 17.1-r0-1 to fix issue with transparent windows when switching tabs, see: https://github.com/Xpra-org/xpra-html5/issues/398
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     dumb-init \
@@ -55,7 +56,7 @@ RUN apt-get update \
     xpra-server \
     xpra-x11 \
     xpra-codecs \
-    xpra-html5 \
+    xpra-html5=17.1-r0-1 \
     xpra-audio \
     dbus \
     dbus-x11 \
