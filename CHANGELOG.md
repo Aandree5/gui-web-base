@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.2](https://github.com/Aandree5/gui-web-base/compare/v1.8.1...v1.8.2) (2025-10-29)
+
+
+### Bug Fixes
+
+* transparent windows when switching tabs ([#82](https://github.com/Aandree5/gui-web-base/issues/82)) ([3b2b968](https://github.com/Aandree5/gui-web-base/commit/3b2b9683336242c362a55c3c3fea71ebffe53dd5))
+
 ## [1.8.1](https://github.com/Aandree5/gui-web-base/compare/v1.8.0...v1.8.1) (2025-10-28)
 
 
