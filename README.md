@@ -113,7 +113,7 @@ Use the `configure-xpra` script during build to append content-type rules to Xpr
 
 | Option           | Description                                         | Example                              |
 | ---------------- | --------------------------------------------------- | ------------------------------------ |
-| `--content-type` | Adds a mapping in the format `<type>:<key>=<value>` | `--content-type=role:gimp-dock=text` |
+| `--content-type` | Adds a mapping in the format `<type>:<key>=<value>` | `--content-type role:gimp-dock=text` |
 
 - #### Supported Match Types
 
@@ -133,11 +133,11 @@ Use the `configure-xpra` script during build to append content-type rules to Xpr
 # Multiple flags can be passed
 # If the value contains spaces or special characters, wrap the value in quotes.
 RUN configure-xpra \
-  --content-type=role:gimp-dock=text \
-  --content-type="title:- Gmail -=text" \
-  --content-type=class-instance:xterm=text \
-  --content-type=commands:my_special_command=picture \
-  --content-type=fallback:role:browser=browser
+  --content-type role:gimp-dock=text \
+  --content-type "title:- Gmail -=text" \
+  --content-type class-instance:xterm=text \
+  --content-type commands:my_special_command=picture \
+  --content-type fallback:role:browser=browser
 ```
 
 ## 🏷️ Versioning & Tags
