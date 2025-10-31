@@ -59,8 +59,10 @@ for arg in "$@"; do
                     ;;
             esac
 
-            IFS=':' read -r match_type rest <<< "$entry"
-            IFS='=' read -r key value <<< "$rest"
+            match_type=${entry%%:*}
+            rest=${entry#*:}
+            key=${rest%%=*}
+            value=${rest#*=}
 
             write_mapping "$match_type" "$key" "$value"
             ;;
