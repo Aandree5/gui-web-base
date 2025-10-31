@@ -40,26 +40,33 @@ write_mapping() {
 
 for arg in "$@"; do
     case "$arg" in
-        --content-type=*)
-            entry="${arg#--content-type=}"
+        --content-type)
+            shift
+            if [ -z "$1" ]; then
+                echo "[ERROR] --content-type requires a value."
+                echo "Usage: $0 --content-type <type>:<key>=<value>" >&2
+                exit 1
+            fi
+            entry="$1"
+            shift
 
             case "$entry" in
                 *:*=*) ;;  # valid format
                 *)
                     echo "[ERROR] Invalid content-type format: '$entry'" >&2
-                    echo "Usage: $0 --content-type=<type>:<key>=<value>" >&2
+                    echo "Usage: $0 --content-type <type>:<key>=<value>" >&2
                     exit 1
                     ;;
             esac
 
             IFS=':' read -r match_type rest <<< "$entry"
-            IFS='=' read -r match_key match_value <<< "$rest"
+            IFS='=' read -r key value <<< "$rest"
 
-            write_mapping "$match_type" "$match_key" "$match_value"
+            write_mapping "$match_type" "$key" "$value"
             ;;
         *)
             echo "[ERROR] Invalid argument: '$arg'" >&2
-            echo "Usage: $0 --content-type=<type>:<key>=<value>" >&2
+                    echo "Usage: $0 --content-type <type>:<key>=<value>" >&2
             exit 1
             ;;
     esac
