@@ -105,15 +105,19 @@ These options can be passed to `CMD` in your Dockerfile to customize app behavio
 
 - ### **Xpra Content-Type Mapping**
 
-This base image includes a helper script called `configure-xpra` that allows downstream Dockerfiles to define how GUI apps are classified by Xpra. These mappings help Xpra choose the best encoding strategy for each window.
-
-- #### Build-Time Configuration
-
 Use the `configure-xpra` script during build to append content-type rules to Xpra’s config files.
+Pass mappings using `--content-type` in the format `<type>:<key>=<value>`.
 
-| Option           | Description                                         | Example                              |
-| ---------------- | --------------------------------------------------- | ------------------------------------ |
-| `--content-type` | Adds a mapping in the format `<type>:<key>=<value>` | `--content-type role:gimp-dock=text` |
+```dockerfile
+# Multiple flags can be passed
+# If the value contains spaces or special characters, wrap the value in quotes.
+RUN configure-xpra \
+  --content-type role:gimp-dock=text \
+  --content-type "title:- Gmail -=text" \
+  --content-type class-instance:xterm=text \
+  --content-type commands:my_special_command=picture \
+  --content-type fallback:role:browser=browser
+```
 
 - #### Supported Match Types
 
@@ -126,19 +130,6 @@ Use the `configure-xpra` script during build to append content-type rules to Xpr
 | `fallback`       | `role:browser=browser` (generic fallback) | Applies when no other match succeeds and is evaluated last as a catch-all rule. |
 
 > For more details, see the [Xpra tuning documentation](https://github.com/Xpra-org/xpra/blob/master/docs/Usage/Encodings.md#tuning).
-
-- #### Example Usage
-
-```dockerfile
-# Multiple flags can be passed
-# If the value contains spaces or special characters, wrap the value in quotes.
-RUN configure-xpra \
-  --content-type role:gimp-dock=text \
-  --content-type "title:- Gmail -=text" \
-  --content-type class-instance:xterm=text \
-  --content-type commands:my_special_command=picture \
-  --content-type fallback:role:browser=browser
-```
 
 ## 🏷️ Versioning & Tags
 
