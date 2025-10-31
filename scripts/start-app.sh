@@ -22,58 +22,58 @@ while [ "$1" ]; do
         --no-restart)
             RESTART_FLAG="--no-restart"
             shift
-            ;;
+        ;;
         --title)
             shift
             if [ -z "$1" ]; then
-                echo "[ERROR] --title requires a value."
-                echo "Usage: $0 [--title <browser_title>] <app_command> [args...]"
+                echo "[ERROR] --title requires a value.">&2
+                echo "Usage: $0 [--title <browser_title>] <app_command> [args...]">&2
                 exit 1
             fi
             BROWSER_TITLE="$1"
             shift
-            ;;
+        ;;
         --min-quality)
             if [ -z "$1" ]; then
-                echo "[ERROR] --min-quality requires a value."
-                echo "Usage: $0 [--min-quality <1-100>] <app_command> [args...]"
+                echo "[ERROR] --min-quality requires a value.">&2
+                echo "Usage: $0 [--min-quality <1-100>] <app_command> [args...]">&2
                 exit 1
             fi
             MIN_QUALITY="$1"
             shift
-            ;;
+        ;;
         --min-speed)
             if [ -z "$1" ]; then
-                echo "[ERROR] --min-speed requires a value."
-                echo "Usage: $0 [--min-speed <1-100>] <app_command> [args...]"
+                echo "[ERROR] --min-speed requires a value.">&2
+                echo "Usage: $0 [--min-speed <1-100>] <app_command> [args...]">&2
                 exit 1
             fi
             MIN_SPEED="$1"
             shift
-            ;;
+        ;;
         --auto-refresh-delay)
             if [ -z "$1" ]; then
-                echo "[ERROR] --auto-refresh-delay requires a value."
-                echo "Usage: $0 [--auto-refresh-delay <seconds>] <app_command> [args...]"
+                echo "[ERROR] --auto-refresh-delay requires a value.">&2
+                echo "Usage: $0 [--auto-refresh-delay <seconds>] <app_command> [args...]">&2
                 exit 1
             fi
             AUTO_REFRESH_DELAY="$1"
             shift
-            ;;
+        ;;
         -*)
             echo "Unknown option: $1" >&2
             exit 2
         ;;
         *)
             break
-            ;;
+        ;;
     esac
 done
 
 # Require an app command as the first argument
 if [ -z "$1" ]; then
-    echo "[ERROR] No application command provided."
-    echo "Usage: $0 [--no-restart] [--title <browser_title>] <app_command> [args...]"
+    echo "[ERROR] No application command provided.">&2
+    echo "Usage: $0 [--no-restart] [--title <browser_title>] <app_command> [args...]">&2
     exit 1
 fi
 
