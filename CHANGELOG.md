@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.1](https://github.com/Aandree5/gui-web-base/compare/v1.9.0...v1.9.1) (2025-10-31)
+
+
+### Bug Fixes
+
+* `bash` only code to `sh` ([#94](https://github.com/Aandree5/gui-web-base/issues/94)) ([89b5fea](https://github.com/Aandree5/gui-web-base/commit/89b5fea427083774b6aae91a843e31629bba97d9))
+
 ## [1.9.0](https://github.com/Aandree5/gui-web-base/compare/v1.8.2...v1.9.0) (2025-10-31)
 
 
