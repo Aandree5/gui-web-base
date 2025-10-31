@@ -27,7 +27,7 @@ while [ "$1" ]; do
             shift
             if [ -z "$1" ]; then
                 echo "[ERROR] --title requires a value."
-                echo "Usage: $0 [--no-restart] [--title <browser_title>] <app_command> [args...]"
+                echo "Usage: $0 [--title <browser_title>] <app_command> [args...]"
                 exit 1
             fi
             BROWSER_TITLE="$1"
@@ -75,7 +75,7 @@ xpra seamless :100 \
     --exit-with-children=no \
     --daemon=no \
     --session-name="$BROWSER_TITLE" \
-    --socket-dirs=$XDG_RUNTIME_DIR \
+    --socket-dirs="$XDG_RUNTIME_DIR" \
     --window-close=ignore \
     --opengl=auto \
     --ssh=no \

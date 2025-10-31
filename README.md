@@ -67,12 +67,12 @@ docker run -d -p 443:5443 gui-web-xterm
 
 These can be set using `--build-arg` during `docker build` to define default values baked into the image.
 
-| Argument    | Description                                    | Default     | Example                       |
-| ----------- | ---------------------------------------------- | ----------- | ----------------------------- |
-| `PUID`   | Default UID for the build/runtime user.              | `1000`      | `--build-arg PUID=1000`    |
-| `PGID`   | Default GID for the build/runtime group.             | `1000`      | `--build-arg PGID=1000`    |
-| `GWB_HOME`  | Default home directory for the runtime user.   | `/home/gwb` | `--build-arg GWB_HOME=/myapp` |
-| `UMASK` | Default file creation mask applied at runtime. | `077`       | `--build-arg UMASK=027`   |
+| Argument   | Description                                    | Default     | Example                       |
+| ---------- | ---------------------------------------------- | ----------- | ----------------------------- |
+| `PUID`     | Default UID for the build/runtime user.        | `1000`      | `--build-arg PUID=1000`       |
+| `PGID`     | Default GID for the build/runtime group.       | `1000`      | `--build-arg PGID=1000`       |
+| `GWB_HOME` | Default home directory for the runtime user.   | `/home/gwb` | `--build-arg GWB_HOME=/myapp` |
+| `UMASK`    | Default file creation mask applied at runtime. | `077`       | `--build-arg UMASK=027`       |
 
 - ### **Runtime Environment Variables**
 
