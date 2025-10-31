@@ -63,7 +63,7 @@ docker run -d -p 443:5443 gui-web-xterm
 
 ## ⚙️ Configuration
 
-- ### Build-Time Arguments
+- ### **Build-Time Arguments**
 
 These can be set using `--build-arg` during `docker build` to define default values baked into the image.
 
@@ -74,7 +74,7 @@ These can be set using `--build-arg` during `docker build` to define default val
 | `GWB_HOME`  | Default home directory for the runtime user.   | `/home/gwb` | `--build-arg GWB_HOME=/myapp` |
 | `UMASK` | Default file creation mask applied at runtime. | `077`       | `--build-arg UMASK=027`   |
 
-- ### Runtime Environment Variables
+- ### **Runtime Environment Variables**
 
 These can be overridden by any downstream image or container using `ENV` or `-e` flags.
 
@@ -89,16 +89,46 @@ These can be overridden by any downstream image or container using `ENV` or `-e`
 
 > `ALLOW_HTTP` is recomended set to `false` to keep all traffic secure, even with self-signed certificates. In some cases it can be usefull to allow HTTP access, shuch as if the app is going to be behind a reverse proxy, which is handling SSL certificates.
 
-- ### App Launch Flags
+- ### **App Launch Flags**
 
 These options can be passed to `CMD` in your Dockerfile to customize app behavior.
 
-| Option         | Description                                                 | Default        | Example                                                |
-| -------------- | ----------------------------------------------------------- | -------------- | ------------------------------------------------------ |
-| `--no-restart` | Prevents the app from restarting when its window is closed. | _(enabled)_    | `CMD ["start-app", "--no-restart", "my-app"]`          |
-| `--title`      | Sets the browser tab title for the web interface.           | `GUI Web Base` | `CMD ["start-app", "--title", "My Web App", "my-app"]` |
+- ### **Xpra Content-Type Mapping**
 
-> By default, the app will restart automatically when closed. Use `--no-restart` to disable this behavior.
+This base image includes a helper script called `configure-xpra` that allows downstream Dockerfiles to define how GUI apps are classified by Xpra. These mappings help Xpra choose the best encoding strategy for each window.
+
+- #### Build-Time Configuration
+
+Use the `configure-xpra` script during build to append content-type rules to Xpra’s config files.
+
+| Option           | Description                                         | Example                              |
+| ---------------- | --------------------------------------------------- | ------------------------------------ |
+| `--content-type` | Adds a mapping in the format `<type>:<key>=<value>` | `--content-type=role:gimp-dock=text` |
+
+- #### Supported Match Types
+
+| Type             | Format Example                            | Description                                                                     |
+| ---------------- | ----------------------------------------- | ------------------------------------------------------------------------------- |
+| `role`           | `role:gimp-dock=text`                     | Matches the window's internal role name (e.g. toolbars, docks, dialogs).        |
+| `title`          | `title:- Gmail -=text`                    | Matches the window title shown in the title bar.                                |
+| `class-instance` | `class-instance:xterm=text`               | Matches the X11 class/instance name of the window.                              |
+| `commands`       | `command:my_special_command=picture`      | Matches the command used to launch the application.                             |
+| `fallback`       | `role:browser=browser` (generic fallback) | Applies when no other match succeeds and is evaluated last as a catch-all rule. |
+
+> For more details, see the [Xpra tuning documentation](https://github.com/Xpra-org/xpra/blob/master/docs/Usage/Encodings.md#tuning).
+
+- #### Example Usage
+
+```dockerfile
+# Multiple flags can be passed
+# If the value contains spaces or special characters, wrap the value in quotes.
+RUN configure-xpra \
+  --content-type=role:gimp-dock=text \
+  --content-type="title:- Gmail -=text" \
+  --content-type=class-instance:xterm=text \
+  --content-type=commands:my_special_command=picture \
+  --content-type=fallback:role:browser=browser
+```
 
 ## 🏷️ Versioning & Tags
 
