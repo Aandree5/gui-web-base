@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.9.0](https://github.com/Aandree5/gui-web-base/compare/v1.8.2...v1.9.0) (2025-10-31)
+
+
+### Features
+
+* added `--min-quality`, `--min-speed`, and `--auto-refresh-delay` as configurable options ([#87](https://github.com/Aandree5/gui-web-base/issues/87)) ([6a37909](https://github.com/Aandree5/gui-web-base/commit/6a37909b93388433802c0607fdfdce4621681927))
+* allow for content-type mapping configuration ([#85](https://github.com/Aandree5/gui-web-base/issues/85)) ([6cd8209](https://github.com/Aandree5/gui-web-base/commit/6cd82098374044ef4b1ffdc822913853e32b42ec))
+
+
+### Bug Fixes
+
+* argument parsing ([#89](https://github.com/Aandree5/gui-web-base/issues/89)) ([5a1f9a3](https://github.com/Aandree5/gui-web-base/commit/5a1f9a3598f89ed4f449a4fe4cf2d283b9fa1757))
+
 ## [1.8.2](https://github.com/Aandree5/gui-web-base/compare/v1.8.1...v1.8.2) (2025-10-29)
 
 
