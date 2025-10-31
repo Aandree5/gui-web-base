@@ -67,12 +67,12 @@ docker run -d -p 443:5443 gui-web-xterm
 
 These can be set using `--build-arg` during `docker build` to define default values baked into the image.
 
-| Argument    | Description                                    | Default     | Example                       |
-| ----------- | ---------------------------------------------- | ----------- | ----------------------------- |
-| `PUID`   | Default UID for the build/runtime user.              | `1000`      | `--build-arg PUID=1000`    |
-| `PGID`   | Default GID for the build/runtime group.             | `1000`      | `--build-arg PGID=1000`    |
-| `GWB_HOME`  | Default home directory for the runtime user.   | `/home/gwb` | `--build-arg GWB_HOME=/myapp` |
-| `UMASK` | Default file creation mask applied at runtime. | `077`       | `--build-arg UMASK=027`   |
+| Argument   | Description                                    | Default     | Example                       |
+| ---------- | ---------------------------------------------- | ----------- | ----------------------------- |
+| `PUID`     | Default UID for the build/runtime user.        | `1000`      | `--build-arg PUID=1000`       |
+| `PGID`     | Default GID for the build/runtime group.       | `1000`      | `--build-arg PGID=1000`       |
+| `GWB_HOME` | Default home directory for the runtime user.   | `/home/gwb` | `--build-arg GWB_HOME=/myapp` |
+| `UMASK`    | Default file creation mask applied at runtime. | `077`       | `--build-arg UMASK=027`       |
 
 - ### **Runtime Environment Variables**
 
@@ -92,6 +92,16 @@ These can be overridden by any downstream image or container using `ENV` or `-e`
 - ### **App Launch Flags**
 
 These options can be passed to `CMD` in your Dockerfile to customize app behavior.
+
+| Option                    | Description                                                                   | Default        | Example                                                      |
+| ------------------------- | ----------------------------------------------------------------------------- | -------------- | ------------------------------------------------------------ |
+| `--no-restart`            | Prevents the app from restarting when its window is closed.                   | _(enabled)_    | `CMD ["start-app", "--no-restart", "my-app"]`                |
+| `--title`                 | Sets the browser tab title for the web interface.                             | `GUI Web Base` | `CMD ["start-app", "--title", "My Web App", "my-app"]`       |
+| `--min-quality` \*        | Sets the minimum image encoding quality (1–100). Lower values save bandwidth. | `0` _(auto)_   | `CMD ["start-app", "--min-quality", "80", "my-app"]`         |
+| `--min-speed` \*          | Sets the minimum encoding speed (1–100). Higher values reduce latency.        | `0` _(auto)_   | `CMD ["start-app", "--min-speed", "50", "my-app"]`           |
+| `--auto-refresh-delay` \* | Delay (in seconds) before sending a lossless refresh after lossy updates.     | `0.25`         | `CMD ["start-app", "--auto-refresh-delay", "0.2", "my-app"]` |
+
+> \* See the [Xpra manual](https://xpra.org/manual) for more information.
 
 - ### **Xpra Content-Type Mapping**
 

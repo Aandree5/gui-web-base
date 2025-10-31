@@ -27,10 +27,37 @@ while [ "$1" ]; do
             shift
             if [ -z "$1" ]; then
                 echo "[ERROR] --title requires a value."
-                echo "Usage: $0 [--no-restart] [--title <browser_title>] <app_command> [args...]"
+                echo "Usage: $0 [--title <browser_title>] <app_command> [args...]"
                 exit 1
             fi
             BROWSER_TITLE="$1"
+            shift
+            ;;
+        --min-quality)
+            if [ -z "$1" ]; then
+                echo "[ERROR] --min-quality requires a value."
+                echo "Usage: $0 [--min-quality <1-100>] <app_command> [args...]"
+                exit 1
+            fi
+            MIN_QUALITY="$1"
+            shift
+            ;;
+        --min-speed)
+            if [ -z "$1" ]; then
+                echo "[ERROR] --min-speed requires a value."
+                echo "Usage: $0 [--min-speed <1-100>] <app_command> [args...]"
+                exit 1
+            fi
+            MIN_SPEED="$1"
+            shift
+            ;;
+        --auto-refresh-delay)
+            if [ -z "$1" ]; then
+                echo "[ERROR] --auto-refresh-delay requires a value."
+                echo "Usage: $0 [--auto-refresh-delay <seconds>] <app_command> [args...]"
+                exit 1
+            fi
+            AUTO_REFRESH_DELAY="$1"
             shift
             ;;
         -*)
@@ -75,7 +102,7 @@ xpra seamless :100 \
     --exit-with-children=no \
     --daemon=no \
     --session-name="$BROWSER_TITLE" \
-    --socket-dirs=$XDG_RUNTIME_DIR \
+    --socket-dirs="$XDG_RUNTIME_DIR" \
     --window-close=ignore \
     --opengl=auto \
     --ssh=no \
@@ -85,4 +112,7 @@ xpra seamless :100 \
     --clipboard-direction=both \
     --file-transfer=yes \
     --webcam=no \
+    --min-quality=${MIN_QUALITY:-0} \
+    --min-speed=${MIN_SPEED:-0} \
+    --auto-refresh-delay=${AUTO_REFRESH_DELAY:-0.25} \
     --start="watch-app $RESTART_FLAG -- \"$APP_CMD\""
