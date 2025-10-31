@@ -90,13 +90,16 @@ RUN mkdir -p /tmp/.X11-unix \
     && chmod 1777 /tmp/.X11-unix
 
 # Copy scripts and configuration files
+COPY --chown=$PUID:$PGID config/nginx/ /gwb/nginx/
+
 COPY --chown=$PUID:$PGID scripts/start-app.sh /usr/local/bin/start-app
 RUN chmod +x /usr/local/bin/start-app
 
 COPY --chown=$PUID:$PGID scripts/watch-app.sh /usr/local/bin/watch-app
 RUN chmod +x /usr/local/bin/watch-app
 
-COPY --chown=$PUID:$PGID config/nginx/ /gwb/nginx/
+COPY --chown=$PUID:$PGID scripts/configure-xpra.sh /usr/local/bin/configure-xpra
+RUN chmod +x /usr/local/bin/configure-xpra
 
 COPY scripts/entrypoint.sh /gwb/entrypoint.sh
 RUN chmod +x /gwb/entrypoint.sh

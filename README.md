@@ -93,6 +93,16 @@ These can be overridden by any downstream image or container using `ENV` or `-e`
 
 These options can be passed to `CMD` in your Dockerfile to customize app behavior.
 
+| Option                    | Description                                                                   | Default        | Example                                                      |
+| ------------------------- | ----------------------------------------------------------------------------- | -------------- | ------------------------------------------------------------ |
+| `--no-restart`            | Prevents the app from restarting when its window is closed.                   | _(enabled)_    | `CMD ["start-app", "--no-restart", "my-app"]`                |
+| `--title`                 | Sets the browser tab title for the web interface.                             | `GUI Web Base` | `CMD ["start-app", "--title", "My Web App", "my-app"]`       |
+| `--min-quality` \*        | Sets the minimum image encoding quality (1–100). Lower values save bandwidth. | `0` _(auto)_   | `CMD ["start-app", "--min-quality", "80", "my-app"]`         |
+| `--min-speed` \*          | Sets the minimum encoding speed (1–100). Higher values reduce latency.        | `0` _(auto)_   | `CMD ["start-app", "--min-speed", "50", "my-app"]`           |
+| `--auto-refresh-delay` \* | Delay (in seconds) before sending a lossless refresh after lossy updates.     | `0.25`         | `CMD ["start-app", "--auto-refresh-delay", "0.2", "my-app"]` |
+
+> \* See the [Xpra manual](https://xpra.org/manual) for more information.
+
 - ### **Xpra Content-Type Mapping**
 
 This base image includes a helper script called `configure-xpra` that allows downstream Dockerfiles to define how GUI apps are classified by Xpra. These mappings help Xpra choose the best encoding strategy for each window.
