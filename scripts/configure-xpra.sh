@@ -17,8 +17,7 @@ set -eu
 
 write_mapping() {
     match_type="$1"
-    key="${match_type}:$2"
-    value="$3"
+    mapping="$2"
     
     case "$match_type" in
         role)           filename="10_role.conf" ;;
@@ -34,14 +33,13 @@ write_mapping() {
     
     comment="# GUI Web Base mappings"
     config_path="/etc/xpra/content-type/$filename"
-    mapping="$key=$value"
     
     if ! grep -Fxq "$comment" "$config_path"; then
         printf "\n%s\n" "$comment" >> "$config_path"
     fi
     
     sed -i "/^$comment$/a $mapping" "$config_path"
-    echo "Mapped $key to '$value' in $filename"
+    echo "Mapped $mapping in $filename"
 }
 
 while [ $# -gt 0 ]; do
@@ -57,7 +55,8 @@ while [ $# -gt 0 ]; do
             shift
             
             case "$entry" in
-                *:*=*) ;;  # valid format
+                fallback:*:*=*) ;;  # fallback format
+                *:*=*) ;;           # standard format
                 *)
                     echo "[ERROR] Invalid content-type format: '$entry'" >&2
                     echo "Usage: $0 --content-type <type>:<key>=<value>" >&2
@@ -67,10 +66,14 @@ while [ $# -gt 0 ]; do
             
             match_type=${entry%%:*}
             rest=${entry#*:}
-            key=${rest%%=*}
-            value=${rest#*=}
             
-            write_mapping "$match_type" "$key" "$value"
+            if [ "$match_type" = "fallback" ]; then
+                mapping="$rest"
+            else
+                mapping="$entry"
+            fi
+            
+            write_mapping "$match_type" "$mapping"
         ;;
         -*)
             echo "Unknown option: $1" >&2

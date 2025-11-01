@@ -127,7 +127,7 @@ RUN configure-xpra \
 | `title`          | `title:- Gmail -=text`                    | Matches the window title shown in the title bar.                                |
 | `class-instance` | `class-instance:xterm=text`               | Matches the X11 class/instance name of the window.                              |
 | `commands`       | `command:my_special_command=picture`      | Matches the command used to launch the application.                             |
-| `fallback`       | `role:browser=browser` (generic fallback) | Applies when no other match succeeds and is evaluated last as a catch-all rule. |
+| `fallback`       | `fallback:role:browser=browser` (generic fallback) | Applies when no other match succeeds and is evaluated last as a catch-all rule. |
 
 > For more details, see the [Xpra tuning documentation](https://github.com/Xpra-org/xpra/blob/master/docs/Usage/Encodings.md#tuning).
 
