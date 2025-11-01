@@ -48,7 +48,7 @@ while [ $# -gt 0 ]; do
             shift
             if [ -z "$1" ]; then
                 echo "[ERROR] --content-type requires a value."
-                echo "Usage: $0 --content-type <type>:<key>=<value>" >&2
+                echo "Usage: $0 --content-type [fallback:]<type>:<key>=<value>" >&2
                 exit 1
             fi
             entry="$1"
@@ -59,7 +59,7 @@ while [ $# -gt 0 ]; do
                 *:*=*) ;;           # standard format
                 *)
                     echo "[ERROR] Invalid content-type format: '$entry'" >&2
-                    echo "Usage: $0 --content-type <type>:<key>=<value>" >&2
+                    echo "Usage: $0 --content-type [fallback:]<type>:<key>=<value>" >&2
                     exit 1
                 ;;
             esac
@@ -81,7 +81,7 @@ while [ $# -gt 0 ]; do
         ;;
         *)
             echo "[ERROR] Invalid argument: '$1'" >&2
-            echo "sUsage: $0 --content-type <type>:<key>=<value>" >&2
+            echo "Usage: $0 --content-type [fallback:]<type>:<key>=<value>" >&2
             exit 1
         ;;
     esac
