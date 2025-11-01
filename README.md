@@ -106,7 +106,7 @@ These options can be passed to `CMD` in your Dockerfile to customize app behavio
 - ### **Xpra Content-Type Mapping**
 
 Use the `configure-xpra` script during build to append content-type rules to Xpra’s config files.
-Pass mappings using `--content-type` in the format `<type>:<key>=<value>`.
+Pass mappings using `--content-type` in the format `[fallback:]<type>:<key>=<value>`.
 
 ```dockerfile
 # Multiple flags can be passed
