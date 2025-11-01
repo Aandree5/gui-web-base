@@ -21,19 +21,27 @@ write_mapping() {
     value="$3"
     
     case "$match_type" in
-        role)           file="10_role.conf" ;;
-        title)          file="30_title.conf" ;;
-        class-instance) file="50_class.conf" ;;
-        commands)       file="70_commands.conf" ;;
-        fallback)       file="90_fallback.conf" ;;
+        role)           filename="10_role.conf" ;;
+        title)          filename="30_title.conf" ;;
+        class-instance) filename="50_class.conf" ;;
+        commands)       filename="70_commands.conf" ;;
+        fallback)       filename="90_fallback.conf" ;;
         *)
             echo "Unknown match type: $match_type"
             exit 1
         ;;
     esac
     
-    echo "$key=$value" >> "/etc/xpra/content-type/$file"
-    echo "Mapped $key to '$value' in $file"
+    comment="# GUI Web Base mappings"
+    config_path="/etc/xpra/content-type/$filename"
+    mapping="$key=$value"
+    
+    if ! grep -Fxq "$comment" "$config_path"; then
+        printf "\n%s\n" "$comment" >> "$config_path"
+    fi
+    
+    sed -i "/^$comment$/a $mapping" "$config_path"
+    echo "Mapped $key to '$value' in $filename"
 }
 
 while [ $# -gt 0 ]; do
