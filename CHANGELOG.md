@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.9.2](https://github.com/Aandree5/gui-web-base/compare/v1.9.1...v1.9.2) (2025-11-01)
+
+
+### Bug Fixes
+
+* `configure-xpra` argument check ([#96](https://github.com/Aandree5/gui-web-base/issues/96)) ([7610719](https://github.com/Aandree5/gui-web-base/commit/7610719732c1c558fecfd6524388bb234ff90169))
+* `fallback` not parsing correctly ([#98](https://github.com/Aandree5/gui-web-base/issues/98)) ([038f158](https://github.com/Aandree5/gui-web-base/commit/038f1587aa6fe59f299c2b98e7986aa7842956fe))
+
 ## [1.9.1](https://github.com/Aandree5/gui-web-base/compare/v1.9.0...v1.9.1) (2025-10-31)
 
 
