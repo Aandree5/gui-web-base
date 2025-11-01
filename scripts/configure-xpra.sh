@@ -13,33 +13,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 set -eu
 
-# Function to write to the correct file
 write_mapping() {
     match_type="$1"
     key="${match_type}:$2"
     value="$3"
-
+    
     case "$match_type" in
-        role)           file="10_role.conf" ;;
-        title)          file="30_title.conf" ;;
-        class-instance) file="50_class.conf" ;;
-        commands)       file="70_commands.conf" ;;
-        fallback)       file="90_fallback.conf" ;;
+        role)           filename="10_role.conf" ;;
+        title)          filename="30_title.conf" ;;
+        class-instance) filename="50_class.conf" ;;
+        commands)       filename="70_commands.conf" ;;
+        fallback)       filename="90_fallback.conf" ;;
         *)
             echo "Unknown match type: $match_type"
             exit 1
-            ;;
+        ;;
     esac
-
-    echo "$key=$value" >> "/etc/xpra/content-type/$file"
-    echo "Mapped $key to '$value' in $file"
+    
+    comment="# GUI Web Base mappings"
+    config_path="/etc/xpra/content-type/$filename"
+    mapping="$key=$value"
+    
+    if ! grep -Fxq "$comment" "$config_path"; then
+        printf "\n%s\n" "$comment" >> "$config_path"
+    fi
+    
+    sed -i "/^$comment$/a $mapping" "$config_path"
+    echo "Mapped $key to '$value' in $filename"
 }
 
-for arg in "$@"; do
-    case "$arg" in
+while [ $# -gt 0 ]; do
+    case "$1" in
         --content-type)
             shift
             if [ -z "$1" ]; then
@@ -49,27 +55,31 @@ for arg in "$@"; do
             fi
             entry="$1"
             shift
-
+            
             case "$entry" in
                 *:*=*) ;;  # valid format
                 *)
                     echo "[ERROR] Invalid content-type format: '$entry'" >&2
                     echo "Usage: $0 --content-type <type>:<key>=<value>" >&2
                     exit 1
-                    ;;
+                ;;
             esac
-
+            
             match_type=${entry%%:*}
             rest=${entry#*:}
             key=${rest%%=*}
             value=${rest#*=}
-
+            
             write_mapping "$match_type" "$key" "$value"
-            ;;
+        ;;
+        -*)
+            echo "Unknown option: $1" >&2
+            exit 2
+        ;;
         *)
-            echo "[ERROR] Invalid argument: '$arg'" >&2
-                    echo "Usage: $0 --content-type <type>:<key>=<value>" >&2
+            echo "[ERROR] Invalid argument: '$1'" >&2
+            echo "sUsage: $0 --content-type <type>:<key>=<value>" >&2
             exit 1
-            ;;
+        ;;
     esac
 done
