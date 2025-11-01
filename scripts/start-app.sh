@@ -17,11 +17,11 @@ RESTART_FLAG=""
 BROWSER_TITLE="GUI Web App"
 
 # Parse optional flags
-while [ "$1" ]; do
+while [ $# -gt 0 ]; do
     case "$1" in
         --no-restart)
-            RESTART_FLAG="--no-restart"
             shift
+            RESTART_FLAG="--no-restart"
         ;;
         --title)
             shift
