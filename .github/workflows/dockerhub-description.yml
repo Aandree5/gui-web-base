@@ -18,7 +18,7 @@ jobs:
         uses: peter-evans/dockerhub-description@v5
         with:
           username: aandree5
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
           repository: ${{ github.repository }}
           short-description: ${{ github.event.repository.description }}
           enable-url-completion: true
