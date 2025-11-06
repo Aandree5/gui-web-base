@@ -22,7 +22,7 @@ A Docker base image to simplify the creation of downstream containers that run L
 - **Automatic restart** - Apps relaunch automatically when closed.
 - **HTTPS redirect** – Enforces secure connections over HTTPS, by default.
 
-## 🚀 Getting Started
+## ✨ Getting Started
 
 This image is designed to be used as a **base** for `Dockerfiles`.  
 Install a desired GUI app and call the following to launch it.
