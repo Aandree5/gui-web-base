@@ -1,7 +1,7 @@
 # GUI Web Base
 
 <div align="center">
-  <img src="images/logo_256.png" alt="Logo" />
+  <img src="https://github.com/Aandree5/gui-web-base/blob/main/images/logo_256.png?raw=true" alt="Logo" />
 </div>
 
 ![Deploy Docker image](https://img.shields.io/github/actions/workflow/status/aandree5/gui-web-base/docker-deploy.yml?logoColor=white&label=Deploy%20Docker%20image&logo=github) 
