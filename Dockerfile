@@ -29,10 +29,10 @@ ARG PGID=1000
 ARG UMASK=077
 ARG GWB_HOME="/home/gwb"
 
-ENV PUID=$PUID
-ENV PGID=$PGID
-ENV UMASK=$UMASK
-ENV GWB_HOME=$GWB_HOME
+ENV PUID="$PUID"
+ENV PGID="$PGID"
+ENV UMASK="$UMASK"
+ENV GWB_HOME="$GWB_HOME"
 
 EXPOSE 5000
 EXPOSE 5443
@@ -43,7 +43,8 @@ RUN apt-get update \
     wget \
     ca-certificates \
     && wget -O "/usr/share/keyrings/xpra.asc" https://xpra.org/xpra.asc \
-    && cd /etc/apt/sources.list.d ; wget "https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/trixie/xpra.sources"
+    && cd /etc/apt/sources.list.d \
+    && wget "https://raw.githubusercontent.com/Xpra-org/xpra/master/packaging/repos/trixie/xpra.sources"
 
 # xpra packages: https://github.com/Xpra-org/xpra/blob/master/docs/Build/Packaging.md
 RUN apt-get update \
@@ -61,6 +62,7 @@ RUN apt-get update \
     dbus-x11 \
     python3-dbus \
     pulseaudio \
+    python3-paramiko \
     xauth \
     openssl \
     nginx \
@@ -71,13 +73,12 @@ RUN apt-get update \
     && rm -rf /etc/apt/sources.list.d/xpra.sources \
     && rm -rf /usr/share/keyrings/xpra.asc
 
-RUN groupadd -r -g $PGID gwb \
-    && useradd -u $PUID -g $PGID -m -d $GWB_HOME -s /bin/bash gwb
+RUN groupadd -r -g "$PGID" gwb \
+    && useradd -u "$PUID" -g "$PGID" -m -d "$GWB_HOME" gwb
 
 # Socket directory with the correct permissions, owned by gwb.
-RUN mkdir -m 755 -p /var/lib/dbus \
-    && mkdir -p /gwb/xpra \
-    && chown $PUID:$PGID /gwb/xpra \
+RUN mkdir -p /gwb/xpra \
+    && chown "${PUID}:${PGID}" /gwb/xpra \
     && chmod 700 /gwb/xpra \
     && dbus-uuidgen > /var/lib/dbus/machine-id
 
@@ -89,16 +90,18 @@ RUN mkdir -p /tmp/.X11-unix \
     && chown -R root:root /tmp/.X11-unix \
     && chmod 1777 /tmp/.X11-unix
 
-# Copy scripts and configuration files
-COPY --chown=$PUID:$PGID config/nginx/ /gwb/nginx/
+ENV XDG_RUNTIME_DIR="/gwb/xpra/runtime"
 
-COPY --chown=$PUID:$PGID scripts/start-app.sh /usr/local/bin/start-app
+# Copy scripts and configuration files
+COPY --chown="${PUID}:${PGID}" config/nginx/ /gwb/nginx/
+
+COPY --chown="${PUID}:${PGID}" scripts/start-app.sh /usr/local/bin/start-app
 RUN chmod +x /usr/local/bin/start-app
 
-COPY --chown=$PUID:$PGID scripts/watch-app.sh /usr/local/bin/watch-app
+COPY --chown="${PUID}:${PGID}" scripts/watch-app.sh /usr/local/bin/watch-app
 RUN chmod +x /usr/local/bin/watch-app
 
-COPY --chown=$PUID:$PGID scripts/configure-xpra.sh /usr/local/bin/configure-xpra
+COPY --chown="${PUID}:${PGID}" scripts/configure-xpra.sh /usr/local/bin/configure-xpra
 RUN chmod +x /usr/local/bin/configure-xpra
 
 COPY scripts/entrypoint.sh /gwb/entrypoint.sh
@@ -114,14 +117,14 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
 ENTRYPOINT ["/gwb/entrypoint.sh"]
 CMD ["start-app"]
 
-# ---- Healthcheck test stage for CI checks (adds xclock) ----
+# ---- Healthcheck test stage for CI checks ----
 # This stage is used in CI to test the healthcheck functionality.
 FROM debian-build AS ci-healthcheck
 
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends x11-apps
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends xterm
 
-CMD ["start-app", "xclock"]
+CMD ["start-app", "xterm"]
 
 # ---- Final stage ----
 # This is the stage used for the final image (default).
