@@ -61,6 +61,7 @@ RUN apt-get update \
     dbus-x11 \
     python3-dbus \
     pulseaudio \
+    pulseaudio-utils \
     xauth \
     openssl \
     nginx \
@@ -78,9 +79,12 @@ RUN mkdir -m 755 -p /var/lib/dbus \
     && mkdir -p /gwb/xpra \
     && chown $PUID:$PGID /gwb/xpra \
     && chmod 700 /gwb/xpra \
-    && dbus-uuidgen > /var/lib/dbus/machine-id
-
-ENV XDG_RUNTIME_DIR="/gwb/xpra"
+    && mkdir -m 755 -p /var/lib/dbus \
+    && mkdir -p /run/dbus \
+    && chown -R "${PUID}:${PGID}" /run/dbus \
+    && dbus-uuidgen > /var/lib/dbus/machine-id \
+    && mkdir -p "${GWB_HOME}/.config/pulse" \
+    && chown -R "${PUID}:${PGID}" "${GWB_HOME}/.config/pulse"
 
 # fix: _XSERVTransmkdir: Owner of /tmp/.X11-unix should be set to root
 # fix: _XSERVTransmkdir: Mode of /tmp/.X11-unix should be set to 1777
