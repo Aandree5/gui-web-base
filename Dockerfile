@@ -61,6 +61,7 @@ RUN apt-get update \
     dbus-x11 \
     python3-dbus \
     pulseaudio \
+    python3-paramiko \
     xauth \
     openssl \
     nginx \
