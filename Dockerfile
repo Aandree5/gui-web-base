@@ -64,6 +64,7 @@ RUN apt-get update \
     pulseaudio \
     python3-paramiko \
     xauth \
+    python3-xdg \
     openssl \
     nginx \
     xfonts-base \
