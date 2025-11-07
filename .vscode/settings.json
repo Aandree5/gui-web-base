@@ -24,11 +24,14 @@
         "noout",
         "noredirect",
         "opengl",
+        "paramiko",
         "pulseaudio",
         "signkey",
         "uuidgen",
         "xauth",
         "xclock",
-        "xpra"
+        "xfonts",
+        "xpra",
+        "xterm"
     ]
 }
