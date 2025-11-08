@@ -58,11 +58,12 @@ RUN apt-get update \
     xpra-codecs \
     xpra-html5 \
     xpra-audio \
+    xpra-audio-server \
     dbus \
     dbus-x11 \
     python3-dbus \
     pulseaudio \
-    pulseaudio-utils \
+    gstreamer1.0-tools \
     python3-paramiko \
     xauth \
     openssl \
