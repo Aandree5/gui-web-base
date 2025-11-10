@@ -99,23 +99,26 @@ nginx -c "$NGINX_CONFIG" -g 'pid /gwb/nginx/nginx.pid;'
 echo "[INFO] Starting application: $APP_NAME"
 # (opengl=auto) - Disable OpenGL when not supported, like for alpine build for a smaller image (for OpenGL support use debian build)
 xpra seamless :100 \
---bind-tcp=127.0.0.1:3000 \
---ssl-cert=/gwb/ssl/ssl-cert.pem \
---html=on \
---exit-with-children=no \
---daemon=no \
---session-name="$BROWSER_TITLE" \
---socket-dirs="$XDG_RUNTIME_DIR" \
---window-close=ignore \
---opengl=auto \
---ssh=no \
---mdns=no \
---pulseaudio=yes \
---clipboard=yes \
---clipboard-direction=both \
---file-transfer=yes \
---webcam=no \
---min-quality=${MIN_QUALITY:-0} \
---min-speed=${MIN_SPEED:-0} \
---auto-refresh-delay=${AUTO_REFRESH_DELAY:-0.25} \
---start="watch-app $RESTART_FLAG -- \"$APP_CMD\""
+    --bind-tcp=127.0.0.1:3000 \
+    --ssl-cert=/gwb/ssl/ssl-cert.pem \
+    --html=on \
+    --exit-with-children=no \
+    --daemon=no \
+    --session-name="$BROWSER_TITLE" \
+    --socket-dirs="$XDG_RUNTIME_DIR" \
+    --window-close=ignore \
+    --opengl=auto \
+    --ssh=no \
+    --mdns=no \
+    --pulseaudio=yes \
+    --notifications=no \
+    --dbus-control=yes \
+    --dbus-launch="dbus-daemon --config-file=/usr/share/dbus-1/system.conf" \
+    --clipboard=yes \
+    --clipboard-direction=both \
+    --file-transfer=yes \
+    --webcam=no \
+    --min-quality=${MIN_QUALITY:-0} \
+    --min-speed=${MIN_SPEED:-0} \
+    --auto-refresh-delay=${AUTO_REFRESH_DELAY:-0.25} \
+    --start="watch-app $RESTART_FLAG -- \"$APP_CMD\""

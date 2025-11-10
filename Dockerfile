@@ -58,10 +58,12 @@ RUN apt-get update \
     xpra-codecs \
     xpra-html5 \
     xpra-audio \
+    xpra-audio-server \
     dbus \
     dbus-x11 \
     python3-dbus \
     pulseaudio \
+    gstreamer1.0-tools \
     python3-paramiko \
     xauth \
     openssl \
@@ -77,12 +79,13 @@ RUN groupadd -r -g "$PGID" gwb \
     && useradd -u "$PUID" -g "$PGID" -m -d "$GWB_HOME" gwb
 
 # Socket directory with the correct permissions, owned by gwb.
-RUN mkdir -p /gwb/xpra \
-    && chown "${PUID}:${PGID}" /gwb/xpra \
-    && chmod 700 /gwb/xpra \
+RUN mkdir -p /run/user/gwb \
+    && chown "${PUID}:${PGID}" /run/user/gwb \
+    && chmod 700 /run/user/gwb \
+    && mkdir -m 755 -p /var/lib/dbus \
+    && mkdir -p /run/dbus \
+    && chown -R "${PUID}:${PGID}" /run/dbus \
     && dbus-uuidgen > /var/lib/dbus/machine-id
-
-ENV XDG_RUNTIME_DIR="/gwb/xpra"
 
 # fix: _XSERVTransmkdir: Owner of /tmp/.X11-unix should be set to root
 # fix: _XSERVTransmkdir: Mode of /tmp/.X11-unix should be set to 1777
@@ -90,7 +93,7 @@ RUN mkdir -p /tmp/.X11-unix \
     && chown -R root:root /tmp/.X11-unix \
     && chmod 1777 /tmp/.X11-unix
 
-ENV XDG_RUNTIME_DIR="/gwb/xpra/runtime"
+ENV XDG_RUNTIME_DIR="/run/user/gwb"
 
 # Copy scripts and configuration files
 COPY --chown="${PUID}:${PGID}" config/nginx/ /gwb/nginx/
