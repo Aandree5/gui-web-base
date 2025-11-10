@@ -111,7 +111,9 @@ xpra seamless :100 \
     --ssh=no \
     --mdns=no \
     --pulseaudio=yes \
+    --notifications=no \
     --dbus-control=yes \
+    --dbus-launch="dbus-daemon --config-file=/usr/share/dbus-1/system.conf" \
     --clipboard=yes \
     --clipboard-direction=both \
     --file-transfer=yes \
