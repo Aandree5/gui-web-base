@@ -66,6 +66,7 @@ RUN apt-get update \
     gstreamer1.0-tools \
     python3-paramiko \
     xauth \
+    python3-xdg \
     openssl \
     nginx \
     xfonts-base \
