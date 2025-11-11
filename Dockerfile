@@ -90,6 +90,24 @@ RUN mkdir -p /run/user/gwb \
     && mkdir -p "${GWB_HOME}/.config/pulse" \
     && chown -R "${PUID}:${PGID}" "${GWB_HOME}/.config/pulse"
 
+# XDG menu file
+RUN mkdir -p /gwb/menus \
+    && mkdir -p /etc/xdg/menus \
+    && cat > /gwb/menus/applications.menu <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN" "https://specifications.freedesktop.org/menu-spec/1.0/menu-1.0.dtd">
+<Menu>
+  <Name>Applications</Name>
+  <Include>
+    <Filename>/usr/share/applications</Filename>
+    <Filename>/usr/local/share/applications</Filename>
+    <Filename>$HOME/.local/share/applications</Filename>
+  </Include>
+</Menu>
+EOF
+
+RUN ln -svf /gwb/menus/applications.menu /etc/xdg/menus/debian-menu.menu
+
 # fix: _XSERVTransmkdir: Owner of /tmp/.X11-unix should be set to root
 # fix: _XSERVTransmkdir: Mode of /tmp/.X11-unix should be set to 1777
 RUN mkdir -p /tmp/.X11-unix \
