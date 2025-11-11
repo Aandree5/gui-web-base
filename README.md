@@ -21,7 +21,8 @@ A Docker base image to simplify the creation of downstream containers that run L
 - **Audio forwarding** - Stream audio from the app to your browser seamlessly.
 - **Automatic restart** - Apps relaunch automatically when closed.
 - **HTTPS redirect** – Enforces secure connections over HTTPS, by default.
-
+- **Launch apps from UI** – `.desktop` entries are now exposed in the graphical menu and can be launched via the UI.
+- 
 ## ✨ Getting Started
 
 This image is designed to be used as a **base** for `Dockerfiles`.  
