@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.1](https://github.com/Aandree5/gui-web-base/compare/v1.10.0...v1.10.1) (2025-11-11)
+
+
+### Bug Fixes
+
+* `pulseaudio` config folder permissions ([#112](https://github.com/Aandree5/gui-web-base/issues/112)) ([d1174b4](https://github.com/Aandree5/gui-web-base/commit/d1174b475d4d8937c78af30bd4c5a2830af6bc79))
+* `xdg` custom menu file ([#114](https://github.com/Aandree5/gui-web-base/issues/114)) ([0c18a02](https://github.com/Aandree5/gui-web-base/commit/0c18a0261ef4997723d63c27304d881b10afbe30))
+
 ## [1.10.0](https://github.com/Aandree5/gui-web-base/compare/v1.9.2...v1.10.0) (2025-11-11)
 
 
