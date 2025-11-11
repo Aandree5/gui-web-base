@@ -21,8 +21,8 @@ A Docker base image to simplify the creation of downstream containers that run L
 - **Audio forwarding** - Stream audio from the app to your browser seamlessly.
 - **Automatic restart** - Apps relaunch automatically when closed.
 - **HTTPS redirect** – Enforces secure connections over HTTPS, by default.
-- **Launch apps from UI** – `.desktop` entries are now exposed in the graphical menu and can be launched via the UI.
-- 
+- **Launch apps from UI** – `.desktop` entries are exposed and can be launched via the UI.
+
 ## ✨ Getting Started
 
 This image is designed to be used as a **base** for `Dockerfiles`.  
@@ -131,6 +131,12 @@ RUN configure-xpra \
 | `fallback`       | `fallback:role:browser=browser` (generic fallback) | Applies when no other match succeeds and is evaluated last as a catch-all rule. |
 
 > For more details, see the [Xpra tuning documentation](https://github.com/Xpra-org/xpra/blob/master/docs/Usage/Encodings.md#tuning).
+
+## 🎛️ Menu Integration
+
+This image includes a built-in freedesktop-compliant menu file that allows installed apps with `.desktop` files to be discovered and launched from the UI.
+
+If an app provides a `.desktop` entry (installed either to `/usr/share/applications` or `~/.local/share/applications`), it will automatically appear in the browser-based menu, no extra configuration needed.
 
 ## 🏷️ Versioning & Tags
 
