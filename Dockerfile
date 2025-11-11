@@ -86,7 +86,9 @@ RUN mkdir -p /run/user/gwb \
     && mkdir -m 755 -p /var/lib/dbus \
     && mkdir -p /run/dbus \
     && chown -R "${PUID}:${PGID}" /run/dbus \
-    && dbus-uuidgen > /var/lib/dbus/machine-id
+    && dbus-uuidgen > /var/lib/dbus/machine-id \
+    && mkdir -p "${GWB_HOME}/.config/pulse" \
+    && chown -R "${PUID}:${PGID}" "${GWB_HOME}/.config/pulse"
 
 # fix: _XSERVTransmkdir: Owner of /tmp/.X11-unix should be set to root
 # fix: _XSERVTransmkdir: Mode of /tmp/.X11-unix should be set to 1777
