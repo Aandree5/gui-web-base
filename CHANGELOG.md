@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.10.0](https://github.com/Aandree5/gui-web-base/compare/v1.9.2...v1.10.0) (2025-11-11)
+
+
+### Features
+
+* allow `.desktop` entries to be launched from the application menu ([#110](https://github.com/Aandree5/gui-web-base/issues/110)) ([ca812a6](https://github.com/Aandree5/gui-web-base/commit/ca812a619a26762e3d6e80ebd99277c508b921f1))
+
+
+### Bug Fixes
+
+* audio forwarding ([#109](https://github.com/Aandree5/gui-web-base/issues/109)) ([c6659d2](https://github.com/Aandree5/gui-web-base/commit/c6659d2f7d8140b57328b3af4defdcb72c0e3981))
+* missing font warning ([#108](https://github.com/Aandree5/gui-web-base/issues/108)) ([0b84657](https://github.com/Aandree5/gui-web-base/commit/0b8465743e7ddb71e0f7134d0efe780dddfadc5f))
+* ssh socket upgrade warning ([#106](https://github.com/Aandree5/gui-web-base/issues/106)) ([b056c05](https://github.com/Aandree5/gui-web-base/commit/b056c056f334d87ab8e3eb583aea5503c813fc72))
+* windows transparent when switching tabs ([#104](https://github.com/Aandree5/gui-web-base/issues/104)) ([8f89ac4](https://github.com/Aandree5/gui-web-base/commit/8f89ac40efa418f87b025237c3c75bd7e3327672))
+
 ## [1.9.2](https://github.com/Aandree5/gui-web-base/compare/v1.9.1...v1.9.2) (2025-11-01)
 
 
