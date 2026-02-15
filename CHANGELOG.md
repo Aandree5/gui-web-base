@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/Aandree5/gui-web-base/compare/v1.10.1...v1.11.0) (2026-02-15)
+
+
+### Features
+
+* add arm64 support ([#115](https://github.com/Aandree5/gui-web-base/issues/115)) ([039349b](https://github.com/Aandree5/gui-web-base/commit/039349b8a55cdb774561e146abd5a6c7ad134829))
+
 ## [1.10.1](https://github.com/Aandree5/gui-web-base/compare/v1.10.0...v1.10.1) (2025-11-11)
 
 
