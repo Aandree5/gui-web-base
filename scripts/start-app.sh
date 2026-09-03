@@ -80,8 +80,13 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-APP_CMD="$@"
-APP_NAME=$(basename "$APP_CMD")
+APP_NAME=$(basename "$1")
+
+# xpra runs --start through a shell, so each argument is re-quoted to survive that parsing
+APP_CMD=""
+for arg in "$@"; do
+    APP_CMD="$APP_CMD '$(printf '%s' "$arg" | sed "s/'/'\\\\''/g")'"
+done
 
 ALLOW_HTTP=${ALLOW_HTTP:-true}
 if [ $ALLOW_HTTP = true ]; then
@@ -131,4 +136,4 @@ xpra seamless :100 \
     --min-quality=${MIN_QUALITY:-0} \
     --min-speed=${MIN_SPEED:-0} \
     --auto-refresh-delay=${AUTO_REFRESH_DELAY:-0.25} \
-    --start="watch-app $RESTART_FLAG -- \"$APP_CMD\""
+    --start="watch-app $RESTART_FLAG --$APP_CMD"
