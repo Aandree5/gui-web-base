@@ -80,8 +80,13 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-APP_CMD="$@"
-APP_NAME=$(basename "$APP_CMD")
+APP_NAME=$(basename "$1")
+
+# xpra runs --start through a shell, so each argument is re-quoted to survive that parsing
+APP_CMD=""
+for arg in "$@"; do
+    APP_CMD="$APP_CMD '$(printf '%s' "$arg" | sed "s/'/'\\\\''/g")'"
+done
 
 ALLOW_HTTP=${ALLOW_HTTP:-true}
 if [ $ALLOW_HTTP = true ]; then
@@ -94,13 +99,23 @@ fi
 
 # Start NGINX
 echo "[INFO] Starting NGINX"
-nginx -c "$NGINX_CONFIG" -g 'pid /gwb/nginx/nginx.pid;'
+# ssl_certificate resolves against the config file's directory, so run nginx from a link inside the runtime dir
+ln -sfn "$NGINX_CONFIG" "$GWB_RUN_DIR/nginx.conf"
+nginx -c "$GWB_RUN_DIR/nginx.conf" -p "$GWB_RUN_DIR" -g 'pid nginx/nginx.pid;'
 
 echo "[INFO] Starting application: $APP_NAME"
+
+DBUS_LAUNCH="dbus-daemon --config-file=/usr/share/dbus-1/system.conf"
+
+# xpra strips LD_PRELOAD from the audio and dbus subprocesses, so re-apply the passwd shim here
+if [ -n "${NSS_WRAPPER_PASSWD:-}" ]; then
+    DBUS_LAUNCH="env LD_PRELOAD=$LD_PRELOAD NSS_WRAPPER_PASSWD=$NSS_WRAPPER_PASSWD NSS_WRAPPER_GROUP=$NSS_WRAPPER_GROUP $DBUS_LAUNCH"
+fi
+
 # (opengl=auto) - Disable OpenGL when not supported, like for alpine build for a smaller image (for OpenGL support use debian build)
 xpra seamless :100 \
     --bind-tcp=127.0.0.1:3000 \
-    --ssl-cert=/gwb/ssl/ssl-cert.pem \
+    --ssl-cert="$GWB_SSL_DIR/ssl-cert.pem" \
     --html=on \
     --exit-with-children=no \
     --daemon=no \
@@ -113,7 +128,7 @@ xpra seamless :100 \
     --pulseaudio=yes \
     --notifications=no \
     --dbus-control=yes \
-    --dbus-launch="dbus-daemon --config-file=/usr/share/dbus-1/system.conf" \
+    --dbus-launch="$DBUS_LAUNCH" \
     --clipboard=yes \
     --clipboard-direction=both \
     --file-transfer=yes \
@@ -121,4 +136,4 @@ xpra seamless :100 \
     --min-quality=${MIN_QUALITY:-0} \
     --min-speed=${MIN_SPEED:-0} \
     --auto-refresh-delay=${AUTO_REFRESH_DELAY:-0.25} \
-    --start="watch-app $RESTART_FLAG -- \"$APP_CMD\""
+    --start="watch-app $RESTART_FLAG --$APP_CMD"

@@ -16,7 +16,7 @@ A Docker base image to simplify the creation of downstream containers that run L
 ## ⚡ Features
 
 - **Linux apps in your browser**
-- **Non-root runtime** - Uses a non-root user at runtime by default.
+- **Rootless runtime** - Never needs root, and runs as any `--user` you choose.
 - **Integrated clipboard** - Seamless copy-paste between app and browser.
 - **Audio forwarding** - Stream audio from the app to your browser seamlessly.
 - **Automatic restart** - Apps relaunch automatically when closed.
@@ -40,11 +40,13 @@ CMD ["start-app","[--no-restart]", "<app>", "[args...]"]
 FROM aandree5/gui-web-base:v1.1
 
 # Install app
+USER root
 RUN apt-get update && \
-    apt-get install -y xterm && \
+    apt-get install -y my-app && \
     && apt-get autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+USER gwb
 
 # Start app
 CMD ["start-app", "xterm"]
@@ -68,27 +70,69 @@ docker run -d -p 443:5443 gui-web-xterm
 
 These can be set using `--build-arg` during `docker build` to define default values baked into the image.
 
-| Argument   | Description                                    | Default     | Example                       |
-| ---------- | ---------------------------------------------- | ----------- | ----------------------------- |
-| `PUID`     | Default UID for the build/runtime user.        | `1000`      | `--build-arg PUID=1000`       |
-| `PGID`     | Default GID for the build/runtime group.       | `1000`      | `--build-arg PGID=1000`       |
-| `GWB_HOME` | Default home directory for the runtime user.   | `/home/gwb` | `--build-arg GWB_HOME=/myapp` |
-| `UMASK`    | Default file creation mask applied at runtime. | `077`       | `--build-arg UMASK=027`       |
+| Argument       | Description                                    | Default    | Example                             |
+| -------------- | ---------------------------------------------- | ---------- | ----------------------------------- |
+| `GWB_RUN_BASE` | Base directory for per-user runtime state.     | `/run/gwb` | `--build-arg GWB_RUN_BASE=/var/gwb` |
+| `UMASK`        | Default file creation mask applied at runtime. | `077`      | `--build-arg UMASK=027`             |
 
 - ### **Runtime Environment Variables**
 
 These can be overridden by any downstream image or container using `ENV` or `-e` flags.
 
-| Variable     | Description                                                                               | Default     | Example                                                          |
-| ------------ | ----------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------------- |
-| `PUID`       | Runtime user ID. Used to remap file ownership and process permissions.                    | `1000`      | `ENV PUID=1000` or `-e PUID=1000`                                |
-| `PGID`       | Runtime group ID. Used to remap file ownership and process permissions.                   | `1000`      | `ENV PGID=1000` or `-e PGID=1000`                                |
-| `APP_DIRS`   | Space-separated list of directories to create and assign to the runtime user.             | _(unset)_   | `ENV APP_DIRS="/myapp/config /var/cache"` or `-e APP_DIRS="..."` |
-| `GWB_HOME`   | Runtime user’s home directory. Overrides the build-time default.                          | `/home/gwb` | `ENV GWB_HOME=/myapp` or `-e GWB_HOME=/myapp`                    |
-| `UMASK`      | File creation mask used during startup. Controls default permissions for generated files. | `077`       | `ENV UMASK=027` or `-e UMASK=027`                                |
-| `ALLOW_HTTP` | Enables or disables automatic HTTP-to-HTTPS redirection.                                  | `false`     | `ENV ALLOW_HTTP=true` or `-e FORCE_HTTPS_REDIRECT=true`          |
+| Variable       | Description                                                                                                                                                                                                                | Default    | Example                                                          |
+| -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ---------------------------------------------------------------- |
+| `APP_DIRS`     | Space-separated list of directories the app must be able to write to. Checked at startup, missing ones are created where possible, and the container exits with a clear error if any are not writable by the running user. | _(unset)_  | `ENV APP_DIRS="/myapp/config /var/cache"` or `-e APP_DIRS="..."` |
+| `GWB_RUN_BASE` | Base directory for per-user runtime state. Each user gets `<base>/<uid>/`.                                                                                                                                                 | `/run/gwb` | `ENV GWB_RUN_BASE=/var/gwb` or `-e GWB_RUN_BASE=/var/gwb`        |
+| `UMASK`        | File creation mask used during startup. Controls default permissions for generated files.                                                                                                                                  | `077`      | `ENV UMASK=027` or `-e UMASK=027`                                |
+| `ALLOW_HTTP`   | Allows plain HTTP connections. When `false`, HTTP is redirected to HTTPS.                                                                                                                                                  | `true`     | `ENV ALLOW_HTTP=false` or `-e ALLOW_HTTP=false`                  |
 
 > `ALLOW_HTTP` is recomended set to `false` to keep all traffic secure, even with self-signed certificates. In some cases it can be usefull to allow HTTP access, shuch as if the app is going to be behind a reverse proxy, which is handling SSL certificates.
+
+- ### **Permissions**
+
+The container never runs as root. It runs as the default `gwb` user, or as whatever identity you pass to `--user`.
+
+- **Running as any user.** Pass `--user <uid>:<gid>` to match a mounted folder's ownership, with no rebuild and no root:
+
+  ```bash
+  # Run as the current host user so mounted folders line up
+  docker run -d -p 443:5443 \
+    --user "$(id -u):$(id -g)" \
+    -v "$PWD/data:/myapp/data" \
+    -e APP_DIRS="/myapp/data" \
+    my-app
+  ```
+
+  All runtime state (home directory, `XDG_RUNTIME_DIR`, SSL certificate, NGINX logs and temp files) are created at startup under `/run/gwb/<uid>/`, so they are always owned by the user actually running the container. Everything else in the image is read-only to the app.
+
+- **Mounted folders** only need to be writable by the uid/gid the container is running as. Any directory listed in `APP_DIRS` is checked at startup and the container exits with a clear error if it isn't writable.
+
+- **Persistence.** Mount a volume at `/run/gwb` to keep the generated SSL certificate and runtime state between runs. Otherwise a new self-signed certificate is generated on each start (and whenever the uid changes). A read-only root filesystem works too, as long as the paths written at runtime stay writable:
+
+  ```bash
+  docker run -d -p 443:5443 --read-only \
+    --tmpfs /run/gwb:mode=1777 \
+    --tmpfs /run/dbus:mode=1777 \
+    --tmpfs /tmp:mode=1777 \
+    --tmpfs /tmp/.X11-unix:mode=1777 \
+    my-app
+  ```
+
+- **Hardening.** Because nothing in the image ever needs to escalate privileges, downstream images can be run with `--security-opt no-new-privileges`.
+
+- **Downstream Dockerfiles** inherit `USER gwb`, so switch back to `root` for any build step that writes outside `/run/gwb` — installing packages, adding files, or running `configure-xpra`, then switch back before the final image:
+
+  ```dockerfile
+  FROM aandree5/gui-web-base:v1.1
+
+  USER root
+  RUN apt-get update && apt-get install -y my-app && apt-get clean
+  RUN configure-xpra --content-type class-instance:my-app=text
+  COPY my-config/ /opt/my-app/config/
+  USER gwb
+
+  CMD ["start-app", "my-app"]
+  ```
 
 - ### **App Launch Flags**
 
@@ -112,22 +156,24 @@ Pass mappings using `--content-type` in the format `[fallback:]<type>:<key>=<val
 ```dockerfile
 # Multiple flags can be passed
 # If the value contains spaces or special characters, wrap the value in quotes.
+USER root
 RUN configure-xpra \
   --content-type role:gimp-dock=text \
   --content-type "title:- Gmail -=text" \
   --content-type class-instance:xterm=text \
   --content-type commands:my_special_command=picture \
   --content-type fallback:role:browser=browser
+USER gwb
 ```
 
 - #### Supported Match Types
 
-| Type             | Format Example                            | Description                                                                     |
-| ---------------- | ----------------------------------------- | ------------------------------------------------------------------------------- |
-| `role`           | `role:gimp-dock=text`                     | Matches the window's internal role name (e.g. toolbars, docks, dialogs).        |
-| `title`          | `title:- Gmail -=text`                    | Matches the window title shown in the title bar.                                |
-| `class-instance` | `class-instance:xterm=text`               | Matches the X11 class/instance name of the window.                              |
-| `commands`       | `command:my_special_command=picture`      | Matches the command used to launch the application.                             |
+| Type             | Format Example                                     | Description                                                                     |
+| ---------------- | -------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `role`           | `role:gimp-dock=text`                              | Matches the window's internal role name (e.g. toolbars, docks, dialogs).        |
+| `title`          | `title:- Gmail -=text`                             | Matches the window title shown in the title bar.                                |
+| `class-instance` | `class-instance:xterm=text`                        | Matches the X11 class/instance name of the window.                              |
+| `commands`       | `command:my_special_command=picture`               | Matches the command used to launch the application.                             |
 | `fallback`       | `fallback:role:browser=browser` (generic fallback) | Applies when no other match succeeds and is evaluated last as a catch-all rule. |
 
 > For more details, see the [Xpra tuning documentation](https://github.com/Xpra-org/xpra/blob/master/docs/Usage/Encodings.md#tuning).
@@ -170,7 +216,6 @@ Contributions are welcome! Please follow these steps to get set up:
    ```
 
 3. **Follow [Conventional Commits](https://www.conventionalcommits.org/)** for commit messages:
-
    - `feat:` - New feature
    - `fix:` - Bug fix
    - `docs:` - Documentation changes
