@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/Aandree5/gui-web-base/compare/v1.11.0...v2.0.0) (2026-09-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* `PUID/PGID` no longer remap ownership at runtime, use `--user` instead. Runtime state moved to `/run/gwb/<uid>`, `GWB_HOME` was replaced by `GWB_RUN_BASE`, and downstream images must switch to `USER root` for build steps that write outside that path.
+
+### Features
+
+* run rootless with any `--user` ([#118](https://github.com/Aandree5/gui-web-base/issues/118)) ([282c3fd](https://github.com/Aandree5/gui-web-base/commit/282c3fdc3304cbfe91ba1e9944b2f7e6064d0b7d))
+
 ## [1.11.0](https://github.com/Aandree5/gui-web-base/compare/v1.10.1...v1.11.0) (2026-02-15)
 
 
