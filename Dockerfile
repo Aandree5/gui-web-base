@@ -24,15 +24,11 @@ LABEL org.opencontainers.image.authors="Aandree5" \
     org.opencontainers.image.title="GUI Web Base" \
     org.opencontainers.image.description="Base image for running Linux GUI applications over the web"
 
-ARG PUID=1000
-ARG PGID=1000
 ARG UMASK=077
-ARG GWB_HOME="/home/gwb"
+ARG GWB_RUN_BASE="/run/gwb"
 
-ENV PUID="$PUID"
-ENV PGID="$PGID"
 ENV UMASK="$UMASK"
-ENV GWB_HOME="$GWB_HOME"
+ENV GWB_RUN_BASE="$GWB_RUN_BASE"
 
 EXPOSE 5000
 EXPOSE 5443
@@ -50,7 +46,6 @@ RUN apt-get update \
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     dumb-init \
-    gosu \
     xpra \
     xpra-common \
     xpra-server \
@@ -70,25 +65,27 @@ RUN apt-get update \
     openssl \
     nginx \
     xfonts-base \
+    libnss-wrapper \
     && apt-get autoremove -y --purge \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && rm -rf /etc/apt/sources.list.d/xpra.sources \
     && rm -rf /usr/share/keyrings/xpra.asc
 
-RUN groupadd -r -g "$PGID" gwb \
-    && useradd -u "$PUID" -g "$PGID" -m -d "$GWB_HOME" gwb
+# Stable path for the entrypoint, the package installs into a multiarch directory.
+RUN ln -svf "$(dpkg -L libnss-wrapper | grep -m1 'libnss_wrapper.so$')" /usr/local/lib/libnss_wrapper.so
 
-# Socket directory with the correct permissions, owned by gwb.
-RUN mkdir -p /run/user/gwb \
-    && chown "${PUID}:${PGID}" /run/user/gwb \
-    && chmod 700 /run/user/gwb \
+# Default identity only, any --user works at runtime. Home is created per-UID at startup.
+RUN groupadd -r -g 1000 gwb \
+    && useradd -M -u 1000 -g 1000 -d "${GWB_RUN_BASE}/1000/home" gwb
+
+# Sticky-writable dirs so any --user can create its own runtime state without root.
+RUN mkdir -p "$GWB_RUN_BASE" \
+    && chmod 1777 "$GWB_RUN_BASE" \
     && mkdir -m 755 -p /var/lib/dbus \
     && mkdir -p /run/dbus \
-    && chown -R "${PUID}:${PGID}" /run/dbus \
-    && dbus-uuidgen > /var/lib/dbus/machine-id \
-    && mkdir -p "${GWB_HOME}/.config/pulse" \
-    && chown -R "${PUID}:${PGID}" "${GWB_HOME}/.config/pulse"
+    && chmod 1777 /run/dbus \
+    && dbus-uuidgen > /var/lib/dbus/machine-id
 
 # XDG menu file
 RUN mkdir -p /gwb/menus \
@@ -117,26 +114,14 @@ RUN mkdir -p /tmp/.X11-unix \
 ENV XDG_RUNTIME_DIR="/run/user/gwb"
 
 # Copy scripts and configuration files
-COPY --chown="${PUID}:${PGID}" config/nginx/ /gwb/nginx/
-
-COPY --chown="${PUID}:${PGID}" scripts/start-app.sh /usr/local/bin/start-app
-RUN chmod +x /usr/local/bin/start-app
-
-COPY --chown="${PUID}:${PGID}" scripts/watch-app.sh /usr/local/bin/watch-app
-RUN chmod +x /usr/local/bin/watch-app
-
-COPY --chown="${PUID}:${PGID}" scripts/configure-xpra.sh /usr/local/bin/configure-xpra
-RUN chmod +x /usr/local/bin/configure-xpra
-
-COPY scripts/entrypoint.sh /gwb/entrypoint.sh
-RUN chmod +x /gwb/entrypoint.sh
-
-# Container healthcheck
-COPY scripts/healthcheck.sh /gwb/healthcheck.sh
-RUN chmod +x /gwb/healthcheck.sh
+COPY config/nginx/ /gwb/nginx/
+COPY --chmod=755 scripts/start-app.sh /usr/local/bin/start-app
+COPY --chmod=755 scripts/watch-app.sh /usr/local/bin/watch-app
+COPY --chmod=755 scripts/configure-xpra.sh /usr/local/bin/configure-xpra
+COPY --chmod=755 scripts/entrypoint.sh /gwb/entrypoint.sh
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD /gwb/healthcheck.sh
+    CMD wget --spider --no-check-certificate --quiet https://localhost:5443 || exit 1
 
 ENTRYPOINT ["/gwb/entrypoint.sh"]
 CMD ["start-app"]
@@ -148,8 +133,12 @@ FROM debian-build AS ci-healthcheck
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends xterm
 
+USER gwb
 CMD ["start-app", "xterm"]
 
 # ---- Final stage ----
 # This is the stage used for the final image (default).
 FROM debian-build
+
+# Default identity only; the entrypoint creates all runtime state under the running uid.
+USER gwb

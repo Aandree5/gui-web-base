@@ -20,107 +20,72 @@ UMASK=${UMASK:-077}
 umask $UMASK
 echo "Using umask: $UMASK"
 
-# Target PUID and PGID
-PUID=${PUID:-1000}
-PGID=${PGID:-1000}
-
-# Current gwb UID and GID
-CURRENT_UID=$(id -u gwb || echo -1)
-CURRENT_GID=$(id -g gwb || echo -1)
-
-# $APP_DIRS - Directories to fix permissions for downstream image
-# All directories to fix permissions
-PERMISSIONS_DIRS="$GWB_HOME $XDG_RUNTIME_DIR /gwb /var/lib/nginx /run/dbus ${APP_DIRS:-}"
-
-echo "Current UID:GID = ${CURRENT_UID:-<missing>}:${CURRENT_GID:-<missing>}"
-echo "Target UID:GID = $PUID:$PGID"
-
-TARGET_USER="gwb"
-TARGET_GROUP="gwb"
-
-fix_dirs_permissions() {
-    for d in $PERMISSIONS_DIRS; do
-        if [ -e "$d" ]; then
-            dir_uid=$(stat -c '%u' "$d")
-            dir_gid=$(stat -c '%g' "$d")
-            
-            if [ "$dir_uid" != "$PUID" ] || [ "$dir_gid" != "$PGID" ]; then
-                echo "Fixing ownership for $d (was $dir_uid:$dir_gid, needs $PUID:$PGID)"
-                if ! chown -R "$PUID:$PGID" "$d"; then
-                    echo "ERROR: failed to set ownership on $d to $PUID:$PGID" >&2
-                    exit 1
-                fi
-            fi
-        else
-            echo "Creating $d owned by $PUID:$PGID"
-            mkdir -p "$d"
-            chown "$PUID:$PGID" "$d"
-            chmod 700 "$d"
-        fi
-    done
-}
-
-# Update permissions only if current UID or GID differ from target
-if [ "$CURRENT_UID" != "$PUID" ] || [ "$CURRENT_GID" != "$PGID" ]; then
-    # Ensure group exists for PGID (create if missing)
-    if getent group "$PGID" >/dev/null 2>&1; then
-        TARGET_GROUP=$(getent group "$PGID" | cut -d: -f1)
-        echo "Using existing group $TARGET_GROUP (GID $PGID)"
-    else
-        # If gwb exists, modify it, otherwise create new user
-        if [ "$CURRENT_GID" -ge 0 ]; then
-            echo "Modifying existing group gwb to GID:$PGID"
-            groupmod -g "$PGID" "gwb"
-        else
-            echo "Creating group $TARGET_GROUP with GID $PGID"
-            groupadd -g "$PGID" "$TARGET_GROUP"
-        fi
+# $APP_DIRS - space-separated list of directories the app needs write access to
+for d in ${APP_DIRS:-}; do
+    if [ ! -e "$d" ]; then
+        mkdir -p "$d" 2>/dev/null || true
     fi
     
-    # Ensure a user exists with the target PUID
-    if getent passwd "$PUID" >/dev/null 2>&1; then
-        TARGET_USER=$(getent passwd "$PUID" | cut -d: -f1)
-        echo "Found existing user $TARGET_USER with UID $PUID"
-    else
-        # If gwb exists, modify it, otherwise create new user
-        if [ "$CURRENT_UID" -ge 0 ]; then
-            echo "Modifying existing user gwb to UID:$PUID GID:$PGID"
-            usermod -u "$PUID" -g "$PGID" "gwb"
-        else
-            echo "Creating user gwb with UID:$PUID GID:$PGID"
-            useradd -m -u "$PUID" -g "$PGID" -d "$GWB_HOME" -s /bin/sh gwb
-        fi
+    if [ ! -w "$d" ]; then
+        echo "ERROR: $d is not writable by uid $(id -u):$(id -g)." >&2
+        echo "       Make it writable on the host, or run with --user matching its owner." >&2
+        exit 1
+    fi
+done
+
+# Per-UID tree, created by the running process so it is owned by whatever --user was given
+GWB_RUN_DIR="${GWB_RUN_BASE:-/run/gwb}/$(id -u)"
+HOME="$GWB_RUN_DIR/home"
+XDG_RUNTIME_DIR="$GWB_RUN_DIR/xdg"
+XDG_CONFIG_HOME="$HOME/.config"
+XDG_CACHE_HOME="$HOME/.cache"
+GWB_SSL_DIR="$GWB_RUN_DIR/ssl"
+export GWB_RUN_DIR HOME XDG_RUNTIME_DIR XDG_CONFIG_HOME XDG_CACHE_HOME GWB_SSL_DIR
+
+if ! mkdir -p "$XDG_RUNTIME_DIR" "$XDG_CONFIG_HOME" "$XDG_CACHE_HOME" "$GWB_SSL_DIR" "$GWB_RUN_DIR/nginx/temp"; then
+    echo "ERROR: cannot create runtime state under $GWB_RUN_DIR as uid $(id -u):$(id -g)." >&2
+    echo "       Mount a writable volume at ${GWB_RUN_BASE:-/run/gwb}, or run without a read-only root filesystem." >&2
+    exit 1
+fi
+
+# xpra and pulseaudio refuse an XDG_RUNTIME_DIR that is not 0700
+if ! chmod 700 "$GWB_RUN_DIR" "$XDG_RUNTIME_DIR"; then
+    echo "ERROR: $GWB_RUN_DIR exists but is not owned by uid $(id -u):$(id -g)." >&2
+    echo "       Remove it, or run with --user matching its owner." >&2
+    exit 1
+fi
+
+# dbus and pulseaudio fail outright if the running uid has no passwd entry
+if ! getent passwd "$(id -u)" >/dev/null 2>&1; then
+    # Copied, not generated, because NSS_WRAPPER_PASSWD replaces the database rather than extending it
+    cp /etc/passwd "$GWB_RUN_DIR/passwd"
+    cp /etc/group "$GWB_RUN_DIR/group"
+    echo "gwb$(id -u):x:$(id -u):$(id -g):gwb:$HOME:/bin/sh" >> "$GWB_RUN_DIR/passwd"
+    
+    if ! getent group "$(id -g)" >/dev/null 2>&1; then
+        echo "gwb$(id -g):x:$(id -g):" >> "$GWB_RUN_DIR/group"
     fi
     
-    # Fix ownership of directories
-    fix_dirs_permissions
-else
-    TARGET_USER=$(getent passwd "$PUID" | cut -d: -f1)
-    
-    # Check PERMISSIONS_DIRS even if UID/GID are unchanged
-    # Make sure ownership is correct
-    fix_dirs_permissions
+    export NSS_WRAPPER_PASSWD="$GWB_RUN_DIR/passwd"
+    export NSS_WRAPPER_GROUP="$GWB_RUN_DIR/group"
+    export LD_PRELOAD=/usr/local/lib/libnss_wrapper.so
 fi
 
 # Generate self-signed SSL certificate if not present
-SSL_DIR="/gwb/ssl"
-SSL_CERT_PATH="$SSL_DIR/ssl-cert.pem"
-SSL_CERT_KEY_PATH="$SSL_DIR/key.pem"
-SSL_CERT_CRT_PATH="$SSL_DIR/crt.pem"
-    
-if [ ! -f $SSL_CERT_PATH ]; then
-    echo "Generating new self-signed SSL certificate..."
+SSL_CERT_PATH="$GWB_SSL_DIR/ssl-cert.pem"
+SSL_CERT_KEY_PATH="$GWB_SSL_DIR/key.pem"
 
-    mkdir -p "$SSL_DIR"
+if [ ! -f "$SSL_CERT_PATH" ]; then
+    echo "Generating new self-signed SSL certificate..."
     
+    SSL_CERT_CRT_PATH="$GWB_SSL_DIR/crt.pem"
     openssl req -new -x509 -days 365 -nodes -out "$SSL_CERT_CRT_PATH" -keyout "$SSL_CERT_KEY_PATH" -sha256  -subj "/CN=localhost" -addext "subjectAltName = DNS:localhost,IP:127.0.0.1"
     cat "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH" > "$SSL_CERT_PATH"
-    
-    chown "$PUID:$PGID" "$SSL_DIR" "$SSL_CERT_PATH" "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH"
-    chmod 700 "$SSL_DIR" "$SSL_CERT_PATH" "$SSL_CERT_KEY_PATH" "$SSL_CERT_CRT_PATH"
+    rm -f "$SSL_CERT_CRT_PATH"
+    chmod 600 "$SSL_CERT_PATH" "$SSL_CERT_KEY_PATH"
 else
     echo "Using existing SSL certificate at $SSL_CERT_PATH"
 fi
 
-echo "Executing as $TARGET_USER"
-exec dumb-init -- gosu $TARGET_USER "$@"
+echo "Executing as uid $(id -u):$(id -g)"
+exec dumb-init -- "$@"
