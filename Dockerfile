@@ -88,9 +88,8 @@ RUN mkdir -p "$GWB_RUN_BASE" \
     && dbus-uuidgen > /var/lib/dbus/machine-id
 
 # XDG menu file
-RUN mkdir -p /gwb/menus \
-    && mkdir -p /etc/xdg/menus \
-    && cat > /gwb/menus/applications.menu <<'EOF'
+RUN mkdir -p /etc/xdg/menus \
+    && cat > /etc/xdg/menus/debian-menu.menu <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Menu PUBLIC "-//freedesktop//DTD Menu 1.0//EN" "https://specifications.freedesktop.org/menu-spec/1.0/menu-1.0.dtd">
 <Menu>
@@ -103,15 +102,11 @@ RUN mkdir -p /gwb/menus \
 </Menu>
 EOF
 
-RUN ln -svf /gwb/menus/applications.menu /etc/xdg/menus/debian-menu.menu
-
 # fix: _XSERVTransmkdir: Owner of /tmp/.X11-unix should be set to root
 # fix: _XSERVTransmkdir: Mode of /tmp/.X11-unix should be set to 1777
 RUN mkdir -p /tmp/.X11-unix \
     && chown -R root:root /tmp/.X11-unix \
     && chmod 1777 /tmp/.X11-unix
-
-ENV XDG_RUNTIME_DIR="/run/user/gwb"
 
 # Copy scripts and configuration files
 COPY config/nginx/ /gwb/nginx/
