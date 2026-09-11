@@ -79,8 +79,6 @@ jobs:
           # `latest=auto` skips pre-release tags such as v2.0.0-rc.1
           flavor: |
             latest=auto
-          labels: |
-            org.opencontainers.image.licenses=Apache-2.0
 
       # Build and push Docker image with Buildx
       # https://github.com/docker/build-push-action
