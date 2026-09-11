@@ -3,6 +3,7 @@ name: Validate Pull Request
 on:
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 # The emulated ARM64 build is slow, so superseded runs are cancelled.
 concurrency:
@@ -30,6 +31,7 @@ jobs:
   docker-build-healthcheck:
     name: Docker Build & Healthcheck
     runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
     steps:
       - uses: actions/checkout@v7
 
@@ -40,7 +42,14 @@ jobs:
         uses: docker/setup-buildx-action@v4
 
       - name: Build Docker image
-        run: docker build --target ci-healthcheck -t gui-web-base:ci-healthcheck .
+        run: |
+          docker buildx build \
+            --cache-from type=gha,scope=amd64 \
+            --cache-to type=gha,mode=max,scope=amd64 \
+            --load \
+            --target ci-healthcheck \
+            -t gui-web-base:ci-healthcheck \
+            .
 
       - name: Run container
         run: docker run -d --name gui-web-test gui-web-base:ci-healthcheck
@@ -61,7 +70,15 @@ jobs:
           exit 1
 
       - name: Build ARM64 Docker image (emulated)
-        run: docker buildx build --platform linux/arm64 --load --target ci-healthcheck -t gui-web-base:ci-healthcheck-arm .
+        run: |
+          docker buildx build \
+            --platform linux/arm64 \
+            --cache-from type=gha,scope=arm64 \
+            --cache-to type=gha,mode=max,scope=arm64 \
+            --load \
+            --target ci-healthcheck \
+            -t gui-web-base:ci-healthcheck-arm \
+            .
 
       - name: Run ARM64 container (emulated)
         run: docker run -d --platform linux/arm64 --name gui-web-test-arm gui-web-base:ci-healthcheck-arm
